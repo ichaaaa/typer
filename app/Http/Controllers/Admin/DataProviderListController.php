@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\DataProvider;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DataProviderListController extends Controller
 {

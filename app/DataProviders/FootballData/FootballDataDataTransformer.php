@@ -4,14 +4,19 @@ namespace App\DataProviders\FootballData;
 
 use App\Contracts\DataTransformer;
 use App\Objects\Competition;
+use App\Objects\Group;
+use App\Objects\Head2head;
+use App\Objects\League;
 use App\Objects\Match;
 use App\Objects\Player;
 use App\Objects\Position;
 use App\Objects\Score;
 use App\Objects\Scorer;
+use App\Objects\Stage;
 use App\Objects\Standings;
 use App\Objects\Table;
 use App\Objects\Team;
+use App\Objects\Tournament;
 
 class FootballDataDataTransformer implements DataTransformer
 {
@@ -30,7 +35,8 @@ class FootballDataDataTransformer implements DataTransformer
 				->setStartDate($competition['currentSeason']['startDate'])
 				->setEndDate($competition['currentSeason']['startDate'])
 				->setMatchday($competition['currentSeason']['currentMatchday'])
-				->setLastUpdated($competition['lastUpdated']);
+				->setLastUpdated($competition['lastUpdated'])
+				->setEmblemURL($competition['emblemUrl']);
 			$output[] = $obj;
 		}
 
@@ -47,7 +53,8 @@ class FootballDataDataTransformer implements DataTransformer
 			->setStartDate($webServiceResponse['currentSeason']['startDate'])
 			->setEndDate($webServiceResponse['currentSeason']['startDate'])
 			->setMatchday($webServiceResponse['currentSeason']['currentMatchday'])
-			->setLastUpdated($webServiceResponse['lastUpdated']);
+			->setLastUpdated($webServiceResponse['lastUpdated'])
+			->setEmblemURL($webServiceResponse['emblemUrl']);
 
 		return $competition;
 	}
@@ -75,16 +82,8 @@ class FootballDataDataTransformer implements DataTransformer
 
 	public function transformToCompetitionStandings($webServiceResponse): Competition
 	{
-		$competition = new Competition;
-		$competition
-			->setId($webServiceResponse['competition']['id'])
-			->setName($webServiceResponse['competition']['name'])
-			->setArea($webServiceResponse['competition']['area']['name'])
-			->setStartDate($webServiceResponse['season']['startDate'])
-			->setEndDate($webServiceResponse['season']['startDate'])
-			->setMatchday($webServiceResponse['season']['currentMatchday'])
-			->setLastUpdated($webServiceResponse['competition']['lastUpdated']);
 
+		$standings = [];
 		foreach($webServiceResponse['standings'] as $standing)
 		{
 			$newStanding = new Standings;
@@ -92,7 +91,6 @@ class FootballDataDataTransformer implements DataTransformer
 			->setStage($standing['stage'])
 			->setType($standing['type'])
 			->setGroup($standing['group']);
-
 			$table = new Table;
 			foreach($standing['table'] as $position)
 			{
@@ -115,16 +113,93 @@ class FootballDataDataTransformer implements DataTransformer
 			}
 
 			$newStanding->setTable($table);
-			$competition->addStanding($newStanding);
+
+
+			$standings[] = $newStanding;
+			
 		}
+
+		$isLeague = false;
+		foreach($standings as $standing){
+			if($standing->getStage() == 'REGULAR_SEASON')
+			{
+				$isLeague = true;
+				break;
+			}
+		}
+
+		if($isLeague)
+		{
+			$competition = new League;
+		}else
+		{
+			$competition = new Tournament;
+		}
+
+		$competition
+			->setId($webServiceResponse['competition']['id'])
+			->setName($webServiceResponse['competition']['name'])
+			->setArea($webServiceResponse['competition']['area']['name'])
+			->setStartDate($webServiceResponse['season']['startDate'])
+			->setEndDate($webServiceResponse['season']['startDate'])
+			->setMatchday($webServiceResponse['season']['currentMatchday'])
+			->setLastUpdated($webServiceResponse['competition']['lastUpdated']);
+
+		$competition->setStandings($standings);
 
 		return $competition;
 	}
 
-	public function transformToCompetitionMatches($webServiceResponse): array
+	public function transformToCompetitionMatches($webServiceResponse): Competition
 	{
-		$output = [];
+		$stages = [];
+		foreach($webServiceResponse['matches'] as $match)
+		{
+			$stage = new Stage;
+			$stage->setCode($match['stage']);
+			$stage->setName($match['group']);
+			if(!in_array($stage, $stages))
+			{
+				$stages[$match['stage']][$match['group']] = $stage;
+			}
+		}
 
+		//dd(array_keys($stages));
+		
+		if(count($stages) == 1 && array_keys($stages)[0] == 'REGULAR_SEASON'){
+			$newCompetition = new League;
+		}
+		elseif(in_array( 'GROUP_STAGE', array_keys($stages)))
+		{
+			$newCompetition = new Tournament;
+			foreach($stages as $code => $stage)
+			{
+				if($code == 'GROUP_STAGE')
+				{	$newStage = new Stage;
+					$newStage->setIsGroup(true);
+					$newStage->setCode($code);
+					foreach($stage as $name => $groupStage)
+					{
+						$newGroup = new Group;
+						$newGroup->setName($groupStage->getName());
+						$newStage->addGroup($newGroup);
+					}
+					$newCompetition->addStage($newStage);
+				}else{
+					$newCompetition->addStage(array_values($stage)[0]);
+				}
+			}
+		}
+		else
+		{
+			throw new \Exception("Competition cannot be initialized");
+		}
+
+		$newCompetition->setId($webServiceResponse['competition']['id']);
+		$newCompetition->setName($webServiceResponse['competition']['name']);
+		$newCompetition->setArea($webServiceResponse['competition']['area']['name']);
+
+		$matches = [];
 		foreach($webServiceResponse['matches'] as $match )
 		{
 			$newMatch = new Match;
@@ -159,15 +234,35 @@ class FootballDataDataTransformer implements DataTransformer
 				->setFullTimeScore($newFullTimeScore)
 				->setHalfTimeScore($newHalfTimeScore)
 				->setExtraTimeScore($newExtraTimeScore)
-				->setPenaltiesScore($newPenaltiesScore);
+				->setPenaltiesScore($newPenaltiesScore)
+				->setCompetition($newCompetition);
 
-			$output[] = $newMatch;
+			if($newCompetition instanceof League)
+			{
+				$newCompetition->addMatch($newMatch);
+			}
+
+			$matches[$match['stage']][$match['group']][] = $newMatch;
 		}
 
-		return $output;
+		if($newCompetition instanceof Tournament)
+		{
+			foreach($newCompetition->getStages() as $stage)
+			{	if($stage->getCode() == 'GROUP_STAGE'){
+					$stage->setMatches($matches[$stage->getCode()]);
+				}else{
+					$stage->setMatches($matches[$stage->getCode()][$stage->getName()]);
+				}
+
+				
+			}			
+		}
+
+		//dd($newCompetition);
+		return $newCompetition;
 	}
 
-	public function transformToCompetitionScorers($webServiceResponse): array
+	public function transformToCompetitionScorers($webServiceResponse): Competition
 	{
 
 		$competition = new Competition;
@@ -178,6 +273,13 @@ class FootballDataDataTransformer implements DataTransformer
 		{
 			$newScorer = new Scorer;
 			$newPlayer = new Player;
+			$newTeam = new Team;
+
+			$newTeam
+				->setId($scorer['team']['id'])
+				->setName($scorer['team']['name']);
+
+
 			$newPlayer
 				->setId($scorer['player']['id'])
 				->setName($scorer['player']['name'])
@@ -188,13 +290,16 @@ class FootballDataDataTransformer implements DataTransformer
 				->setNationality($scorer['player']['nationality'])
 				->setPosition($scorer['player']['position'])
 				->setShirtNumber($scorer['player']['shirtNumber']);
+
 			$newScorer
 				->setPlayer($newPlayer)
+				->setTeam($newTeam)
 				->setNumberOfGoals($scorer['numberOfGoals']);
+
 			$competition->addScorer($newScorer);
 		}
 
-		return $competition->getScorers();
+		return $competition;
 	}
 
 	public function transformToMatchesList($webServiceResponse)
@@ -225,6 +330,9 @@ class FootballDataDataTransformer implements DataTransformer
 			$newPenaltiesScore->setHomeTeamScore($match['score']['penalties']['homeTeam']);
 			$newPenaltiesScore->setAwayTeamScore($match['score']['penalties']['awayTeam']);
 
+			$newCompetition = new Competition;
+			$newCompetition->setId($match['competition']['id']);
+			$newCompetition->setName($match['competition']['name']);
 			$newMatch
 				->setId($match['id'])
 				->setDate($match['utcDate'])
@@ -235,7 +343,8 @@ class FootballDataDataTransformer implements DataTransformer
 				->setFullTimeScore($newFullTimeScore)
 				->setHalfTimeScore($newHalfTimeScore)
 				->setExtraTimeScore($newExtraTimeScore)
-				->setPenaltiesScore($newPenaltiesScore);
+				->setPenaltiesScore($newPenaltiesScore)
+				->setCompetition($newCompetition);
 
 			$output[] = $newMatch;
 		}
@@ -247,10 +356,30 @@ class FootballDataDataTransformer implements DataTransformer
 	public function transformToMatch($webServiceResponse): Match
 	{
 			$newMatch = new Match;
+
 			$homeTeam = new Team;
-			$homeTeam->setId($webServiceResponse['match']['homeTeam']['id'])->setName($webServiceResponse['match']['homeTeam']['name']);
+			$homeTeam
+				->setId($webServiceResponse['match']['homeTeam']['id'])
+				->setName($webServiceResponse['match']['homeTeam']['name'])
+				->setWins($webServiceResponse['head2head']['homeTeam']['wins'])
+				->setDraws($webServiceResponse['head2head']['homeTeam']['draws'])
+				->setLosses($webServiceResponse['head2head']['homeTeam']['losses'])
+				;
 			$awayTeam = new Team;
-			$awayTeam->setId($webServiceResponse['match']['awayTeam']['id'])->setName($webServiceResponse['match']['awayTeam']['name']);
+			$awayTeam
+				->setId($webServiceResponse['match']['awayTeam']['id'])
+				->setName($webServiceResponse['match']['awayTeam']['name'])
+				->setWins($webServiceResponse['head2head']['awayTeam']['wins'])
+				->setDraws($webServiceResponse['head2head']['awayTeam']['draws'])
+				->setLosses($webServiceResponse['head2head']['awayTeam']['losses']);
+
+
+			$newHead2head = new Head2head;
+			$newHead2head
+				->setNumberOfMatches($webServiceResponse['head2head']['numberOfMatches'])
+				->setTotalGoals($webServiceResponse['head2head']['totalGoals'])
+				->setHomeTeam($homeTeam)
+				->setAwayTeam($awayTeam);				
 
 			$newFullTimeScore = new Score;
 			$newFullTimeScore->setHomeTeamScore($webServiceResponse['match']['score']['fullTime']['homeTeam']);
@@ -268,6 +397,10 @@ class FootballDataDataTransformer implements DataTransformer
 			$newPenaltiesScore->setHomeTeamScore($webServiceResponse['match']['score']['penalties']['homeTeam']);
 			$newPenaltiesScore->setAwayTeamScore($webServiceResponse['match']['score']['penalties']['awayTeam']);
 
+			$newCompetition = new Competition;
+			$newCompetition->setId($webServiceResponse['match']['competition']['id']);
+			$newCompetition->setName($webServiceResponse['match']['competition']['name']);
+
 			$newMatch
 				->setId($webServiceResponse['match']['id'])
 				->setDate($webServiceResponse['match']['utcDate'])
@@ -278,7 +411,9 @@ class FootballDataDataTransformer implements DataTransformer
 				->setFullTimeScore($newFullTimeScore)
 				->setHalfTimeScore($newHalfTimeScore)
 				->setExtraTimeScore($newExtraTimeScore)
-				->setPenaltiesScore($newPenaltiesScore);
+				->setPenaltiesScore($newPenaltiesScore)
+				->setCompetition($newCompetition)
+				->setHead2head($newHead2head);
 
 			return $newMatch;
 	}
@@ -311,6 +446,10 @@ class FootballDataDataTransformer implements DataTransformer
 			$newPenaltiesScore->setHomeTeamScore($match['score']['penalties']['homeTeam']);
 			$newPenaltiesScore->setAwayTeamScore($match['score']['penalties']['awayTeam']);
 
+			$newCompetition = new Competition;
+			$newCompetition->setId($match['competition']['id']);
+			$newCompetition->setName($match['competition']['name']);
+
 			$newMatch
 				->setId($match['id'])
 				->setDate($match['utcDate'])
@@ -321,7 +460,8 @@ class FootballDataDataTransformer implements DataTransformer
 				->setFullTimeScore($newFullTimeScore)
 				->setHalfTimeScore($newHalfTimeScore)
 				->setExtraTimeScore($newExtraTimeScore)
-				->setPenaltiesScore($newPenaltiesScore);
+				->setPenaltiesScore($newPenaltiesScore)
+				->setCompetition($newCompetition);
 
 			$output[] = $newMatch;
 		}
@@ -340,7 +480,37 @@ class FootballDataDataTransformer implements DataTransformer
 			->setAddress($webServiceResponse['address'])
 			->setWebsite($webServiceResponse['website'])
 			->setFounded($webServiceResponse['founded'])
-			->setVenue($webServiceResponse['venue']);
+			->setVenue($webServiceResponse['venue'])
+			->setClubColors($webServiceResponse['clubColors']);
+
+		foreach($webServiceResponse['squad'] as $player)
+		{
+			if($player['role'] == 'PLAYER'){
+				$newPlayer = new Player;
+				$newPlayer
+					->setId($player['id'])
+					->setName($player['name'])
+					->setDateOfBirth($player['dateOfBirth'])
+					->setCountryOfBirth($player['countryOfBirth'])
+					->setNationality($player['nationality'])
+					->setPosition($player['position'])
+					->setShirtNumber($player['shirtNumber']);
+			}
+			$newTeam->addPlayer($newPlayer);	
+		}
+
+		foreach ($webServiceResponse['activeCompetitions'] as $competition) {
+			if($competition['plan'] == config('app.api_keys.football_data.plan'))
+			{
+				$newCompetition = new Competition;
+				$newCompetition
+					->setId($competition['id'])
+					->setName($competition['name'])
+					->setLastUpdated($competition['lastUpdated'])
+					->setArea($competition['area']['name']);
+				$newTeam->addCompetition($newCompetition);
+			}
+		}
 		return $newTeam;
 
 	}
@@ -349,19 +519,19 @@ class FootballDataDataTransformer implements DataTransformer
 	{
 		$newPlayer = new Player;
 		$newPlayer
-		->setId($scorer['id'])
-		->setName($scorer['name'])
-		->setFirstName($scorer['firstName'])
-		->setLastName($scorer['lastName'])
-		->setDateOfBirth($scorer['dateOfBirth'])
-		->setCountryOfBirth($scorer['countryOfBirth'])
-		->setNationality($scorer['nationality'])
-		->setPosition($scorer['position'])
-		->setShirtNumber($scorer['shirtNumber']);
+		->setId($webServiceResponse['id'])
+		->setName($webServiceResponse['name'])
+		->setFirstName($webServiceResponse['firstName'])
+		->setLastName($webServiceResponse['lastName'])
+		->setDateOfBirth($webServiceResponse['dateOfBirth'])
+		->setCountryOfBirth($webServiceResponse['countryOfBirth'])
+		->setNationality($webServiceResponse['nationality'])
+		->setPosition($webServiceResponse['position'])
+		->setShirtNumber($webServiceResponse['shirtNumber']);
 		return $newPlayer;
 	}
 
-	public function transformToPlayerMatcher($webServiceResponse): array
+	public function transformToPlayerMatches($webServiceResponse): array
 	{
 		$output = [];
 
@@ -389,6 +559,10 @@ class FootballDataDataTransformer implements DataTransformer
 			$newPenaltiesScore->setHomeTeamScore($match['score']['penalties']['homeTeam']);
 			$newPenaltiesScore->setAwayTeamScore($match['score']['penalties']['awayTeam']);
 
+			$newCompetition = new Competition;
+			$newCompetition->setId($match['competition']['id']);
+			$newCompetition->setName($match['competition']['name']);
+
 			$newMatch
 				->setId($match['id'])
 				->setDate($match['utcDate'])
@@ -399,7 +573,8 @@ class FootballDataDataTransformer implements DataTransformer
 				->setFullTimeScore($newFullTimeScore)
 				->setHalfTimeScore($newHalfTimeScore)
 				->setExtraTimeScore($newExtraTimeScore)
-				->setPenaltiesScore($newPenaltiesScore);
+				->setPenaltiesScore($newPenaltiesScore)
+				->setCompetition($newCompetition);
 
 			$output[] = $newMatch;
 		}

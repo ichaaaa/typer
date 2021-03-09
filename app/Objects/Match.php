@@ -2,8 +2,10 @@
 
 namespace App\Objects;
 
+use App\Objects\Competition;
 use App\Objects\Score;
 use App\Objects\Team;
+use Carbon\Carbon;
 
 class Match
 {
@@ -18,6 +20,8 @@ class Match
 	private $halfTimeScore;
 	private $extraTimeScore;
 	private $penaltiesScore;
+    private $competition;
+    private $head2head;
 
 
     /**
@@ -45,7 +49,7 @@ class Match
      */
     public function getDate()
     {
-        return $this->date;
+        return Carbon::parse($this->date)->format('Y.m.d H:i:s');
     }
 
     /**
@@ -236,6 +240,46 @@ class Match
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompetition(): Competition
+    {
+        return $this->competition;
+    }
+
+    /**
+     * @param mixed $competition
+     *
+     * @return self
+     */
+    public function setCompetition(Competition $competition)
+    {
+        $this->competition = $competition;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHead2head()
+    {
+        return $this->head2head;
+    }
+
+    /**
+     * @param mixed $head2head
+     *
+     * @return self
+     */
+    public function setHead2head($head2head)
+    {
+        $this->head2head = $head2head;
 
         return $this;
     }

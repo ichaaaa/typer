@@ -1,12 +1,8 @@
 @extends('layouts.app')
 
-@section('css')
-        <link rel="stylesheet" media="screen, print" href="{{asset('css/datagrid/datatables/datatables.bundle.css')}}">
-@endsection
-
 @section('content')
 
-@role('manager')
+@role('developer')
 
  Hello developer
 
@@ -57,19 +53,18 @@
                         </ol>
                         <div class="subheader">
                             <h1 class="subheader-title">
-                                <i class='subheader-icon fal fa-eye'></i>{{$competition->getName()}}
+                                <i class='subheader-icon fal fa-check'></i>Twoje typery
                                 <small>
-                                    {{$competition->getArea()}}
+                                    Wybierz typer
                                 </small>
                             </h1>
                         </div>
-                        @forelse($competition->getStandings() as $standing)
                         <div class="row">
                         	<div class="col-xl-6">
                                 <div id="panel-1" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
-                                            Tabela - {{$standing->getType()}}
+                                            Typery
                                         </h2>
                                         <div class="panel-toolbar">
                                             <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
@@ -79,64 +74,33 @@
                                     </div>
                                     <div class="panel-container show">
                                         <div class="panel-content">
-                                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Position</th>
-                                                        <th>Name</th>
-                                                        <th>Points</th>
-                                                        <th>Played Games</th>
-                                                        <th>Won</th>
-                                                        <th>Draw</th>
-                                                        <th>Lost</th>
-                                                        <th>Goals For</th>
-                                                        <th>Goals Against</th>
-                                                        <th>Goals Diffrence</th>
-                                                        <th>Form</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @forelse($standing->getTable()->getPositions() as $position)
-                                                    <tr>
-                                                        <th>{{$position->getPositionNum()}}</th>
-                                                        <th>{{$position->getTeam()->getName()}}</th>
-                                                        <th>{{$position->getPoints()}}</th>
-                                                        <th>{{$position->getPlayedGames()}}</th>
-                                                        <th>{{$position->getWon()}}</th>
-                                                        <th>{{$position->getDraw()}}</th>
-                                                        <th>{{$position->getLost()}}</th>
-                                                        <th>{{$position->getGoalsFor()}}</th>
-                                                        <th>{{$position->getGoalsAgainst()}}</th>
-                                                        <th>{{$position->getGoalDifference()}}</th>
-                                                        <th>{{$position->getForm()}}</th>
-                                                    </tr>
-                                                    @empty
+                                        <div class="card-group">    
+                                        @forelse($typers as $typer)
+                                        {{$typer->id}}
+                                            <div class="card border m-auto m-lg-0" style="max-width: 18rem;">
+                                                <img src="@if($typer->getCompetition($service)->getEmblemURL() != null) {{url($typer->getCompetition($service)->getEmblemURL())}} @else https://via.placeholder.com/150 @endif" class="card-img-top" alt="...">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{$typer->getCompetition($service)->getName()}} - {{$typer->getCompetition($service)->getArea()}}</h5>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p class="card-text">Kolejka: {{$typer->getCompetition($service)->getMatchday()}}</p>
+                                                    <small class="text-muted">Data aktualizacji: {{ $typer->getCompetition($service)->getLastUpdated() }}</small>
+                                                </div>
+                                                    <div class="card-body">
+                                                        <a href="#" class="btn btn-primary">Wybierz</a>
+                                                    </div>
+                                            </div>
+                        		          @if( $loop->iteration % 3 == 0 ) </div><div class="card-group"> @endif
+                                        @empty
 
-                                                    @endforelse
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Position</th>
-                                                        <th>Name</th>
-                                                        <th>Points</th>
-                                                        <th>Played Games</th>
-                                                        <th>Won</th>
-                                                        <th>Draw</th>
-                                                        <th>Lost</th>
-                                                        <th>Goals For</th>
-                                                        <th>Goals Against</th>
-                                                        <th>Goals Diffrence</th>
-                                                        <th>Form</th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
+                                    Brak rozgrywek do wyświetlenia
+
+                                @endforelse
                                         </div>
                                     </div>
-                        	   </div>
-                            </div>
-                        </div>
-                        @empty
-                        @endforelse                        		
+                                </div>
+                        	</div>
+                        </div>			
                     </main>
                     <!-- this overlay is activated only when mobile menu is triggered -->
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
@@ -180,34 +144,5 @@
 						+ smartpanels.js (extension)
 						+ src/../jquery-snippets.js (core) -->
 		@section('js')
-        <script src="{{asset('js/datagrid/datatables/datatables.bundle.js')}}"></script>
-        <script>
-            /* demo scripts for change table color */
-            /* change background */
 
-
-            $(document).ready(function()
-            {
-                $('#dt-basic-example').dataTable(
-                {
-                    responsive: true
-                });
-
-                $('.js-thead-colors a').on('click', function()
-                {
-                    var theadColor = $(this).attr("data-bg");
-                    console.log(theadColor);
-                    $('#dt-basic-example thead').removeClassPrefix('bg-').addClass(theadColor);
-                });
-
-                $('.js-tbody-colors a').on('click', function()
-                {
-                    var theadColor = $(this).attr("data-bg");
-                    console.log(theadColor);
-                    $('#dt-basic-example').removeClassPrefix('bg-').addClass(theadColor);
-                });
-
-            });
-
-        </script>
 		@endsection

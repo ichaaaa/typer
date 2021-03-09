@@ -57,7 +57,18 @@ class Standings
      */
     public function getGroup()
     {
+
         return $this->group;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormattedGroupName()
+    {
+        $group = ucwords(str_replace('_', ' ', strtolower($this->group)));
+
+        return $group;
     }
 
     /**

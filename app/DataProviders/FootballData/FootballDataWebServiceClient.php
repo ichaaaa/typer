@@ -178,7 +178,7 @@ class FootballDataWebServiceClient implements WebServiceClient, HasTokenContract
         }
         catch(\Exception $e)
         {
-            return [];
+            return $e;
         }
 
     }

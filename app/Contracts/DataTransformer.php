@@ -18,9 +18,9 @@ interface DataTransformer
 
 	public function transformToCompetitionStandings($webServiceResponse): Competition;
 
-	public function transformToCompetitionMatches($webServiceResponse): array;
+	public function transformToCompetitionMatches($webServiceResponse): Competition;
 
-	public function transformToCompetitionScorers($webServiceResponse): array;
+	public function transformToCompetitionScorers($webServiceResponse): Competition;
 
 	public function transformToMatchesList($webServiceResponse);
 
@@ -32,6 +32,6 @@ interface DataTransformer
 
 	public function transformToPlayer($webServiceResponse): Player;
 
-	public function transformToPlayerMatcher($webServiceResponse): array;
+	public function transformToPlayerMatches($webServiceResponse): array;
 
 }

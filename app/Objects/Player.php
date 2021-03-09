@@ -2,6 +2,8 @@
 
 namespace App\Objects;
 
+use Carbon\Carbon;
+
 class Player
 {
 	private $id;
@@ -99,7 +101,7 @@ class Player
      */
     public function getDateOfBirth()
     {
-        return $this->dateOfBirth;
+        return Carbon::parse($this->dateOfBirth)->format('Y.m.d');
     }
 
     /**

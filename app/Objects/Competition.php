@@ -3,6 +3,7 @@
 namespace App\Objects;
 
 use App\Objects\Scorer;
+use App\Objects\Stage;
 use App\Objects\Standings;
 use Carbon\Carbon;
 
@@ -11,14 +12,14 @@ class Competition
 	protected $id;
 	protected $name;
 	protected $teams = [];
-	protected $matches;
 	protected $area;
 	protected $startDate;
 	protected $endDate;
 	protected $scorers = [];
 	protected $matchday;
 	protected $lastUpdated;
-    protected $standings = [];
+    protected $emblemURL;
+
 
 
 	public function getId(): int
@@ -144,7 +145,7 @@ class Competition
      */
     public function getLastUpdated()
     {
-        return Carbon::parse($this->lastUpdated)->format('Y.m.d H:i:s');
+        return Carbon::parse($this->lastUpdated)->format('Y-m-d H:i:s');
     }
 
     /**
@@ -159,13 +160,38 @@ class Competition
         return $this;
     }
 
-    public function addStanding(Standings $standing)
+    /**
+     * @return mixed
+     */
+    public function getEmblemURL(): ?string
     {
-        array_push($this->standings, $standing);
+        return $this->emblemURL;
     }
 
-    public function getStandings()
+    /**
+     * @param mixed $emblemURL
+     *
+     * @return self
+     */
+    public function setEmblemURL($emblemURL)
     {
-        return $this->standings;
+        $this->emblemURL = $emblemURL;
+
+        return $this;
+    }
+
+    public function getStages()
+    {
+        return $this->stages;
+    }
+
+    public function addStage(Stage $stage)
+    {
+        if(!in_array($stage, $this->stages))
+        {
+            array_push($this->stages, $stage);
+        }
+    
+        return $this;
     }
 }

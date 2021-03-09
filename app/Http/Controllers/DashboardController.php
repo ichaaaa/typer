@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DataProvider;
 use App\DataProviders\FootballData\FootballDataDataTransformer;
 use App\DataProviders\FootballData\FootballDataWebServiceClient;
 use App\Objects\Competition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class DashboardController extends Controller
 {
@@ -14,10 +16,10 @@ class DashboardController extends Controller
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     /**
      * Show the application dashboard.
@@ -26,7 +28,12 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $storage = Redis::Connection();
 
+        $storage->set('name', 'dupa');
+        dd($storage->get('name'));
+
+        dd(DataProvider::active()->firstOrFail()->id);
         $webClient = new FootballDataWebServiceClient();
         $transformer = new FootballDataDataTransformer();
         dd($transformer->transformToCompetitionScorers($webClient->getCompetitionScorers('PL')));

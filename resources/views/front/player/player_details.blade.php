@@ -53,20 +53,23 @@
                         </ol>
                         <div class="subheader">
                             <h1 class="subheader-title">
-                                <i class='subheader-icon fal fa-check'></i>Dostępne rozgrywki
+                                <i class='subheader-icon fal fa-check'></i>{{$player->getName()}}
                                 <small>
-                                    Wybierz rozgrywkę
+                                    Dane zawodnika
                                 </small>
                             </h1>
                         </div>
                         <div class="row">
-                        	<div class="col-xl-6">
-                                <div id="panel-1" class="panel">
+                            <div class="col-sm-12">
+
+                                <div id="panel-2" class="panel">
+
                                     <div class="panel-hdr">
                                         <h2>
-                                            Rozgrywki
+                                            Bio
                                         </h2>
                                         <div class="panel-toolbar">
+                                            <button type="button" id="matches-modal-button" class="btn btn-primary" data-attr="{{ route('player_matches_list', ['id' => $player->getId()]) }}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Terminarz">Terminarz</button>                 
                                             <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
                                             <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
                                             <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
@@ -74,31 +77,24 @@
                                     </div>
                                     <div class="panel-container show">
                                         <div class="panel-content">
-                                        <div class="card-group">    
-                                        @forelse($competitions as $competition)
-                        		
-                                                <div class="card">
-                                                    <div class="w-100 bg-fusion-50 rounded-top border-top-right-radius-0" style="padding:40px 0 40px;"></div>
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">{{$competition->getName()}} - {{$competition->getArea()}}</h5>
-                                                        <p class="card-text">Current matchday: {{$competition->getMatchday()}}</p>
-                                                        <small class="text-muted">Last updated: {{ $competition->getLastUpdated() }}</small>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <a href="{{ route('show_competition_details', ['id'=>$competition->getId()]) }}" class="btn btn-primary">Wybierz</a>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col-sm-3"><img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg" class="img-fluid" alt="Responsive image"></div>
+                                                <div class="col-sm-9">
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">Imię i nazwisko: {{$player->getName()}}</li>
+                                                        <li class="list-group-item">Data urodzenia: {{$player->getDateOfBirth()}}</li>
+                                                        <li class="list-group-item">Kraj urodzenia: {{$player->getCountryOfBirth()}}</li>
+                                                        <li class="list-group-item">Narodowość: {{$player->getNationality()}}</li>
+                                                        <li class="list-group-item">Pozycja: {{$player->getPosition()}}</li>
+                                                    </ul>                                        
                                                 </div>
-                        		          @if( $loop->iteration % 3 == 0 ) </div><div class="card-group"> @endif
-                                        @empty
-
-                                    Brak rozgrywek do wyświetlenia
-
-                                @endforelse
+                                            </div>                                            
                                         </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
-                        	</div>
-                        </div>			
+                            </div>
+                        </div>
+                        @include('front.modal.right_large_modal')
                     </main>
                     <!-- this overlay is activated only when mobile menu is triggered -->
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
@@ -141,6 +137,44 @@
 						+ waves.js (extension)
 						+ smartpanels.js (extension)
 						+ src/../jquery-snippets.js (core) -->
-		@section('js')
+        @section('js')
+        <script src="{{asset('js/datagrid/datatables/datatables.bundle.js')}}"></script>
+        <script>
+            /* demo scripts for change table color */
+            /* change background */
+            $(document).on('click', '#matches-modal-button', function(event) {
+                event.preventDefault();
+                var title = $(this).attr('data-title');
+                let href = $(this).attr('data-attr');
+                $.ajax({
+                    url: href,
+                    beforeSend: function() {
+                        $('#loader').show();
+                        $('.modal-body').html('');
+                    },
+                    // return the result
+                    success: function(result) {
+                        $('.default-example-modal-right-lg').modal("show");
+                        $('.modal-body').html(result).show();
+                        $('.modal-title').text(title);
 
-		@endsection
+                        $('#dt-matches').dataTable(
+                        {
+                            responsive: true
+                        });
+                    },
+                    complete: function() {
+                        $('#loader').hide();
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                        $('#loader').hide();
+                    },
+                    timeout: 8000
+                })
+            });
+
+        </script>
+        @endsection
+

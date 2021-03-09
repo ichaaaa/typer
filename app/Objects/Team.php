@@ -2,6 +2,7 @@
 
 namespace App\Objects;
 
+use App\Objects\Competition;
 use App\Objects\Player;
 
 class Team
@@ -15,7 +16,11 @@ class Team
 	private $founded;
 	private $venue;
 	private $players = [];
-
+    private $clubColors;
+    private $competitions = [];
+    private $wins;
+    private $draws;
+    private $losses;
 
     /**
      * @return mixed
@@ -190,4 +195,104 @@ class Team
     	array_push($this->players, $player);
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getClubColors()
+    {
+        return $this->clubColors;
+    }
+
+    /**
+     * @param mixed $clubColors
+     *
+     * @return self
+     */
+    public function setClubColors($clubColors)
+    {
+        $this->clubColors = $clubColors;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCompetitions(): array
+    {
+        return $this->competitions;
+    }
+
+    /**
+     * @param mixed $competitions
+     *
+     * @return self
+     */
+    public function addCompetition(Competition $competition)
+    {
+        array_push($this->competitions, $competition);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWins()
+    {
+        return $this->wins;
+    }
+
+    /**
+     * @param mixed $wins
+     *
+     * @return self
+     */
+    public function setWins($wins)
+    {
+        $this->wins = $wins;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDraws()
+    {
+        return $this->draws;
+    }
+
+    /**
+     * @param mixed $draws
+     *
+     * @return self
+     */
+    public function setDraws($draws)
+    {
+        $this->draws = $draws;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLosses()
+    {
+        return $this->losses;
+    }
+
+    /**
+     * @param mixed $losses
+     *
+     * @return self
+     */
+    public function setLosses($losses)
+    {
+        $this->losses = $losses;
+
+        return $this;
+    }
 }

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\DataProvider;
 use App\Observers\DataProviderObserver;
+use App\Observers\TyperObserver;
+use App\Typer;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,5 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         DataProvider::observe(DataProviderObserver::class);
+        Typer::observe(TyperObserver::class);
     }
 }
