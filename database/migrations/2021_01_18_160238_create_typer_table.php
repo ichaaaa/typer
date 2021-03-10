@@ -14,7 +14,7 @@ class CreateTyperTable extends Migration
     public function up()
     {
         Schema::create('typer', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             
             $table->unsignedInteger('competition_id');
             $table->unsignedBigInteger('data_provider_id');
