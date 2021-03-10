@@ -11,7 +11,9 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
     	App\Permission::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         App\Permission::create(
         	[
         	'slug' => 'create-tasks',

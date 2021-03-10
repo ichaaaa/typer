@@ -11,7 +11,10 @@ class DataProviderSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         App\DataProvider::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        
         App\DataProvider::create([
         	'const_id' => 1,
         	'name' => 'Football Data',

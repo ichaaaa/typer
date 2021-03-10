@@ -11,7 +11,9 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');        
     	App\Role::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');        
         App\Role::create(
         	[
         	'slug' => 'developer',
