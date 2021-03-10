@@ -353,7 +353,7 @@ class FootballDataDataTransformer implements DataTransformer
 
 	}
 
-	public function transformToMatch($webServiceResponse): Match
+	public function transformToMatch($webServiceResponse): Game
 	{
 			$newMatch = new Game;
 
