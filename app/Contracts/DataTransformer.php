@@ -3,7 +3,7 @@
 namespace App\Contracts;
 
 use App\Objects\Competition;
-use App\Objects\Match;
+use App\Objects\Game;
 use App\Objects\Player;
 use App\Objects\Standings;
 use App\Objects\Team;
@@ -24,7 +24,7 @@ interface DataTransformer
 
 	public function transformToMatchesList($webServiceResponse);
 
-	public function transformToMatch($webServiceResponse): Match;
+	public function transformToMatch($webServiceResponse): Game;
 
 	public function transformToTeamMatches($webServiceResponse): array;
 

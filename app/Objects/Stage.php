@@ -3,7 +3,7 @@
 namespace App\Objects;
 
 use App\Objects\Group;
-use App\Objects\Match;
+use App\Objects\Game;
 
 class Stage 
 {
@@ -67,7 +67,7 @@ class Stage
      *
      * @return self
      */
-    public function addMatch(Match $match)
+    public function addMatch(Game $match)
     {
         array_push($this->matches, $match);
 

@@ -2,7 +2,7 @@
 
 namespace App\Objects;
 
-use App\Objects\Match;
+use App\Objects\Game;
 
 class League extends Competition
 {
@@ -37,7 +37,7 @@ class League extends Competition
 		return $this->matches;
 	}
 
-	public function addMatch(Match $match)
+	public function addMatch(Game $match)
 	{
 		array_push($this->matches, $match);
 		return $this;

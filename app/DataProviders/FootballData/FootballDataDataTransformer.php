@@ -7,7 +7,7 @@ use App\Objects\Competition;
 use App\Objects\Group;
 use App\Objects\Head2head;
 use App\Objects\League;
-use App\Objects\Match as Mecz;
+use App\Objects\Game;
 use App\Objects\Player;
 use App\Objects\Position;
 use App\Objects\Score;
@@ -202,7 +202,7 @@ class FootballDataDataTransformer implements DataTransformer
 		$matches = [];
 		foreach($webServiceResponse['matches'] as $match )
 		{
-			$newMatch = new Mecz();
+			$newMatch = new Game();
 			$homeTeam = new Team;
 			$homeTeam->setId($match['homeTeam']['id'])->setName($match['homeTeam']['name']);
 			$awayTeam = new Team;
@@ -308,7 +308,7 @@ class FootballDataDataTransformer implements DataTransformer
 
 		foreach($webServiceResponse['matches'] as $match )
 		{
-			$newMatch = new Match;
+			$newMatch = new Game;
 			$homeTeam = new Team;
 			$homeTeam->setId($match['homeTeam']['id'])->setName($match['homeTeam']['name']);
 			$awayTeam = new Team;
@@ -355,7 +355,7 @@ class FootballDataDataTransformer implements DataTransformer
 
 	public function transformToMatch($webServiceResponse): Match
 	{
-			$newMatch = new Match;
+			$newMatch = new Game;
 
 			$homeTeam = new Team;
 			$homeTeam
@@ -424,7 +424,7 @@ class FootballDataDataTransformer implements DataTransformer
 
 		foreach($webServiceResponse['matches'] as $match )
 		{
-			$newMatch = new Match;
+			$newMatch = new Game;
 			$homeTeam = new Team;
 			$homeTeam->setId($match['homeTeam']['id'])->setName($match['homeTeam']['name']);
 			$awayTeam = new Team;
@@ -537,7 +537,7 @@ class FootballDataDataTransformer implements DataTransformer
 
 		foreach($webServiceResponse['matches'] as $match )
 		{
-			$newMatch = new Match;
+			$newMatch = new Game;
 			$homeTeam = new Team;
 			$homeTeam->setId($match['homeTeam']['id'])->setName($match['homeTeam']['name']);
 			$awayTeam = new Team;
