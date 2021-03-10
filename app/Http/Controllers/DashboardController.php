@@ -7,7 +7,6 @@ use App\DataProviders\FootballData\FootballDataDataTransformer;
 use App\DataProviders\FootballData\FootballDataWebServiceClient;
 use App\Objects\Competition;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class DashboardController extends Controller
 {
@@ -28,10 +27,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $storage = Redis::Connection();
-
-        $storage->set('name', 'dupa');
-        dd($storage->get('name'));
 
         dd(DataProvider::active()->firstOrFail()->id);
         $webClient = new FootballDataWebServiceClient();
