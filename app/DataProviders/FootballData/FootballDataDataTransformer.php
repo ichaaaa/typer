@@ -202,7 +202,7 @@ class FootballDataDataTransformer implements DataTransformer
 		$matches = [];
 		foreach($webServiceResponse['matches'] as $match )
 		{
-			$newMatch = new Match;
+			$newMatch = new Match();
 			$homeTeam = new Team;
 			$homeTeam->setId($match['homeTeam']['id'])->setName($match['homeTeam']['name']);
 			$awayTeam = new Team;
