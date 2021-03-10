@@ -14,13 +14,13 @@ class CreateBetsTable extends Migration
     public function up()
     {
         Schema::create('bets', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('typer_id');
+            $table->id();
+            $table->unsignedBigInteger('typer_id');
             $table->unsignedInteger('match_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedInteger('home_team_score');
             $table->unsignedInteger('away_team_score');
-            $table->unsignedInteger('extra_question_answer_id');
+            $table->unsignedBigInteger('extra_question_answer_id');
             $table->boolean('sure_thing');
             $table->timestamps();
 

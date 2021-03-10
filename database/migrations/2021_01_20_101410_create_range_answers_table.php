@@ -14,8 +14,8 @@ class CreateRangeAnswersTable extends Migration
     public function up()
     {
         Schema::create('range_answers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('answer_id');
+            $table->id();
+            $table->unsignedBigInteger('answer_id');
             $table->float('from', 5, 2);
             $table->float('to', 5, 2);
             $table->timestamps();

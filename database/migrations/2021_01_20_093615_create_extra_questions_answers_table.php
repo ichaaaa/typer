@@ -14,8 +14,8 @@ class CreateExtraQuestionsAnswersTable extends Migration
     public function up()
     {
         Schema::create('extra_questions_answers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('extra_question_id');
+            $table->id();
+            $table->unsignedBigInteger('extra_question_id');
             $table->timestamps();
 
             $table->foreign('extra_question_id')->references('id')->on('extra_questions')->onDelete('cascade');

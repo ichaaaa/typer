@@ -17,8 +17,8 @@ class CreateTyperTable extends Migration
             $table->increments('id');
             
             $table->unsignedInteger('competition_id');
-            $table->unsignedInteger('data_provider_id');
-            $table->unsignedInteger('visibility_type_id');
+            $table->unsignedBigInteger('data_provider_id');
+            $table->unsignedBigInteger('visibility_type_id');
 
             $table->float('membership_fee_amount', 5, 2);
             $table->string('membership_fee_currency', 3);

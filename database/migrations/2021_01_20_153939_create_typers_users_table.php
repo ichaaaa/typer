@@ -14,8 +14,8 @@ class CreateTypersUsersTable extends Migration
     public function up()
     {
         Schema::create('typers_users', function (Blueprint $table) {
-            $table->unsignedInteger('typer_id');
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('typer_id');
+            $table->unsignedBigInteger('user_id');
             $table->boolean('confirmed');
             $table->boolean('banned');
             $table->boolean('payed');

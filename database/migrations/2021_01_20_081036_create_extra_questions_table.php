@@ -14,9 +14,9 @@ class CreateExtraQuestionsTable extends Migration
     public function up()
     {
         Schema::create('extra_questions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->unsignedInteger('match_id');
-            $table->unsignedInteger('question_type_id');
+            $table->unsignedBigInteger('question_type_id');
             $table->string('description', 255);
             $table->string('helper', 255);
             $table->timestamps();

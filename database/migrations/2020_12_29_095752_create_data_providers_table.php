@@ -14,7 +14,7 @@ class CreateDataProvidersTable extends Migration
     public function up()
     {
         Schema::create('data_providers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->unsignedInteger('const_id')->unique();
             $table->string('name');
             $table->string('website');

@@ -14,8 +14,8 @@ class CreateDescriptiveAnswersTable extends Migration
     public function up()
     {
         Schema::create('descriptive_answers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('answer_id');
+            $table->id();
+            $table->unsignedBigInteger('answer_id');
             $table->string('answer', 255);
             $table->timestamps();
 

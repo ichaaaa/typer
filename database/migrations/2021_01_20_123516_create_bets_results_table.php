@@ -14,8 +14,8 @@ class CreateBetsResultsTable extends Migration
     public function up()
     {
         Schema::create('bets_results', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('bet_id');
+            $table->id();
+            $table->unsignedBigInteger('bet_id');
             $table->boolean('winning_team_guess');
             $table->boolean('extact_score_guess');
             $table->boolean('extra_question_guess');

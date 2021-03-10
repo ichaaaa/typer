@@ -14,7 +14,7 @@ class CreateVisibilityTypesTable extends Migration
     public function up()
     {
         Schema::create('visibility_types', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('type', 100);
         });
     }

@@ -14,8 +14,8 @@ class CreateExtraQuestionChoicesTable extends Migration
     public function up()
     {
         Schema::create('extra_question_choices', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('extra_question_id');
+            $table->id();
+            $table->unsignedBigInteger('extra_question_id');
             $table->string('choice', 255);
             $table->timestamps();
 

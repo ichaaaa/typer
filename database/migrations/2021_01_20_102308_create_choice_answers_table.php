@@ -14,8 +14,8 @@ class CreateChoiceAnswersTable extends Migration
     public function up()
     {
         Schema::create('choice_answers', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('answer_id');
+            $table->id();
+            $table->unsignedBigInteger('answer_id');
             $table->string('choice', 255);
             $table->timestamps();
 

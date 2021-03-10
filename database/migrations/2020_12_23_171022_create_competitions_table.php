@@ -14,7 +14,7 @@ class CreateCompetitionsTable extends Migration
     public function up()
     {
         Schema::create('competitions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->unsignedInteger('mapped_id');
             $table->string('name');
             $table->mediumText('description');
