@@ -62,7 +62,6 @@ class Typer extends Model
 		return $this->users->contains($user);
 	}
 
-
 	public function getCompetition($service)
 	{
         $competitions = $service->findAll();
@@ -95,7 +94,5 @@ class Typer extends Model
 	{
 		return Carbon::parse($value)->format('Y-m-d');
 	}
-
-
 
 }

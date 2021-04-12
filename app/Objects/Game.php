@@ -2,12 +2,13 @@
 
 namespace App\Objects;
 
+use App\Bet;
 use App\Objects\Competition;
 use App\Objects\Score;
 use App\Objects\Team;
 use Carbon\Carbon;
 
-class Match
+class Game
 {
 	private $id;
 	private $date;
@@ -22,6 +23,7 @@ class Match
 	private $penaltiesScore;
     private $competition;
     private $head2head;
+    private $typerUserBet;
 
 
     /**
@@ -49,7 +51,15 @@ class Match
      */
     public function getDate()
     {
-        return Carbon::parse($this->date)->format('Y.m.d H:i:s');
+        return Carbon::parse($this->date)->timezone('Europe/Warsaw')->format('Y.m.d H:i:s');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHour()
+    {
+        return Carbon::parse($this->date)->timezone('Europe/Warsaw')->format('H:i:s');
     }
 
     /**
@@ -127,7 +137,7 @@ class Match
     /**
      * @return mixed
      */
-    public function getWinner(): Team 
+    public function getWinner() 
     {
         return $this->winner;
     }
@@ -137,7 +147,7 @@ class Match
      *
      * @return self
      */
-    public function setWinner(Team $winner)
+    public function setWinner($winner)
     {
         $this->winner = $winner;
 
@@ -282,5 +292,30 @@ class Match
         $this->head2head = $head2head;
 
         return $this;
+    }
+
+    public static function findClosestMatchDate(array $dates)
+    {
+        $now = Carbon::now()->format('Y-m-d');
+        foreach($dates as $date)
+        {
+            if(Carbon::parse($date)->timezone('Europe/Warsaw') >= $now)
+            {
+                return $date;
+            }
+        }
+
+        $lastElement = end($dates);
+        return $lastElement;
+    }
+
+    public function setTyperUserBet($typer_id, $user_id)
+    {
+        $this->typerUserBet = Bet::where('typer_id', $typer_id)->where('user_id', $user_id)->where('match_id', $this->getId())->first();
+    }
+
+    public function getTyperUserBet()
+    {
+        return $this->typerUserBet;
     }
 }

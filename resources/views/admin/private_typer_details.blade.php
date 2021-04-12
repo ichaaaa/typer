@@ -44,7 +44,7 @@
                 <!-- END Left Aside -->
                 <div class="page-content-wrapper">
                     <!-- BEGIN Page Header -->
-					@include('front.header')
+					@include('front.inc.header')
                     <!-- END Page Header -->
                     <!-- BEGIN Page Content -->
                     <!-- the #js-page-content id is needed for some plugins to initialize -->
@@ -93,11 +93,11 @@
                             </div>
                         </div>
                         <div class="row">
-                        	<div class="col-xl-8">
+                        	<div class="col-xl-12">
                                 <div id="panel-1" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
-                                            Zaproszeni uczestnicy
+                                            Zarządzaj
                                         </h2>
                                         <div class="panel-toolbar">
 
@@ -110,6 +110,19 @@
                                     </div>
                                     <div class="panel-container show">
                                         <div class="panel-content">
+                                        <div class="tab-slider">                                            
+                                            <div class="wrap">
+                                                <ul class="nav nav-pills nav-justified" role="tablist" id="menus">
+
+                                                
+                                                    <li class="nav-item"><a class="nav-link active" id="users_list" data-toggle="tab" href="#tab-1">Zarządzaj uczestnikami</a></li>
+                                                    <li class="nav-item"><a class="nav-link" id="matches-to-check" data-toggle="tab" href="#tab-2">Przelicz punkty</a></li>
+                                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-3">Tabela</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="tab-content py-3">
+                                            <div class="tab-pane active show" id="tab-1" role="tabpanel">
                                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                                 <thead>
                                                     <tr>
@@ -148,6 +161,10 @@
                                                 </tfoot>
                                             </table>
                                         </div>
+                                        <div class="tab-pane" id="tab-2" role="tabpanel">Mecze do kliknięcia</div>
+                                        <div class="tab-pane" id="tab-3" role="tabpanel">Ludzie</div>
+                                        </div>
+                                        </div>
                                     </div>
                         	   </div>
                             </div>
@@ -174,7 +191,7 @@
                     <!-- this overlay is activated only when mobile menu is triggered -->
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
                     <!-- BEGIN Page Footer -->
-                    @include('front.footer')
+                    @include('front.inc.footer')
                     <!-- END Page Footer -->
                     <!-- BEGIN Shortcuts -->
                     @include('front.nav.shortcuts')
@@ -282,6 +299,32 @@
                 })
             });
 
+            $(document).on('click', '#matches-to-check', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '{{route('show_matches_without_bet_result', ['typer'=>$typer])}}',
+                    // beforeSend: function() {
+                    //     //$('#loader').show();
+                    //     $('#tab-2').html('');
+                    // },
+                    // return the result
+                    success: function(result) {
+                        //$('.default-example-modal-right-lg').modal("show");
+                        $('#tab-2').html(result).show();
+
+                    },
+                    complete: function() {
+                        $('#matches-to-check').removeAttr('id');
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                    },
+                    timeout: 8000
+                })
+            });
+
             $(document).on('click', '.close', function(event) {
                 event.preventDefault();
                 $(this).parent().parent().remove();
@@ -289,6 +332,7 @@
 
             $(document).ready(function()
             {
+                $("#users_list").tab('show');
                 $("table[id^=dt-basic-example]").dataTable(
                 {
                     responsive: false

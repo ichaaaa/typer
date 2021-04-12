@@ -73,6 +73,7 @@ class FootballDataWebServiceClient implements WebServiceClient, HasTokenContract
     */
     public function getCompetitionMatches($competition_id, array $params = [])
     {
+        //dd($params);
         return $this->makeRequest(
             'https://api.football-data.org/v2/competitions/'.$competition_id.'/matches',
             $params
@@ -166,7 +167,7 @@ class FootballDataWebServiceClient implements WebServiceClient, HasTokenContract
         $queryParams['plan'] = $this->baseParams['plan'];
 
         $queryParams = array_merge($queryParams, $params);
-
+//dd($queryParams);
         try{
             return json_decode(
                 $this->guzzleClient->request('GET', $url, [
@@ -178,7 +179,7 @@ class FootballDataWebServiceClient implements WebServiceClient, HasTokenContract
         }
         catch(\Exception $e)
         {
-            return $e;
+            dd($e);
         }
 
     }

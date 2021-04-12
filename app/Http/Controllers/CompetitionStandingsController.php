@@ -20,6 +20,6 @@ class CompetitionStandingsController extends Controller
     public function index($competition_id, $group = null, CompetitionService $service)
     {
         $competition = $service->findWithStandings($competition_id);
-        return view('front.standings', compact(['competition', 'group']));
+        return view('front.inc.standings', compact(['competition', 'group']));
     }
 }

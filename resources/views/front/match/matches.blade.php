@@ -115,9 +115,9 @@
                         </ol>
                         <div class="subheader">
                             <h1 class="subheader-title">
-                                <i class='subheader-icon fal fa-eye'></i>{{$competition->getName()}}
+                                <i class='subheader-icon fal fa-eye'></i>Ostatnie oraz nadchodzące mecze
                                 <small>
-                                    {{$competition->getArea()}}
+                                    
                                 </small>
                             </h1>
                         </div>
@@ -129,7 +129,7 @@
 								            Fazy
 								        </h2>
 								        <div class="panel-toolbar">
-								        	<button type="button" id="scorers-modal-button" class="btn btn-primary" data-attr="{{ route('scorers_list', ['competition_id' => $competition->getId()]) }}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Klasyfikacja strzelców">Strzelcy</button>
+								        	<button type="button" id="scorers-modal-button" class="btn btn-primary" data-attr="#" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Klasyfikacja strzelców">Strzelcy</button>
 								            <button class="btn btn-panel waves-effect waves-themed" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
 								            <button class="btn btn-panel waves-effect waves-themed" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
 								            <button class="btn btn-panel waves-effect waves-themed" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
@@ -152,15 +152,15 @@
                                         <div class="tab-content py-3">
                                             @foreach($matches as $date => $games)
                                             <div class="tab-pane fade" id="tab-{{$date}}" role="tabpanel">
-                                                <table class="table table-bordered table-hover table-striped w-100">
+                                                <table class="table table-bordered table-hover table-striped w-100" id="dt-matchday-{{$date}}">
                                                     <thead>
                                                         <tr>
                                                             <th>Godzina</th>
-                                                            <th>Drużyny</th>
+                                                            <th>Gospodarz</th>
+                                                            <th>Gość</th>
                                                             <th>Wynik</th>
-                                                            <th>Twój typ</th>
-                                                            <th>Pytanie</th>
                                                             <th>Status</th>
+                                                            <th>Rozgrywki</th>
                                                             <th></th>
                                                         </tr>
                                                     </thead>
@@ -168,23 +168,23 @@
                                                         @foreach($games as $match)
                                                         <tr>
                                                             <td>{{$match->getHour()}}</td>
-                                                            <td><a href="{{route('show_team_details',['id' => $match->getHomeTeam()->getId()])}}" >{{$match->getHomeTeam()->getName()}}</a> : <a href="{{route('show_team_details',['id' => $match->getAwayTeam()->getId()])}}" >{{$match->getAwayTeam()->getName()}}</a></td>
-                                                            <td>{{$match->getFullTimeScore()->getHomeTeamScore()}} : {{$match->getFullTimeScore()->getAwayTeamScore()}} <a href="{{route('show_match_details', ['id' => $match->getId()])}}" id="match-{{$match->getId()}}" class="badge badge-primary">Pokaż więcej</a></td>
-                                                            <td>@if(isset($bets[$typer->id][Auth::id()][$match->getId()])) {{$bets[$typer->id][Auth::id()][$match->getId()]->home_team_score}} : {{$bets[$typer->id][Auth::id()][$match->getId()]->away_team_score}} @if($bets[$typer->id][Auth::id()][$match->getId()]->sure_thing) <i class="fas fa-check" data-toggle="tooltip" data-original-title="Pewniak"></i> @endif @endif</td>
-                                                            <td></td>
+	                                                        <td><a href="{{route('show_team_details',['id' => $match->getHomeTeam()->getId()])}}" >{{$match->getHomeTeam()->getName()}}</a></td>
+	                                                        <td><a href="{{route('show_team_details',['id' => $match->getAwayTeam()->getId()])}}" >{{$match->getAwayTeam()->getName()}}</a></td>
+                                                            <td>{{$match->getFullTimeScore()->getHomeTeamScore()}} : {{$match->getFullTimeScore()->getAwayTeamScore()}}</td>
                                                             <td>{{$match->getStatus()}}</td>
-                                                            <td>@if($match->getStatus() == 'SCHEDULED' && !isset($bets[$typer->id][Auth::id()][$match->getId()]) )<button type="button" class="btn btn-primary waves-effect waves-themed create-bet" data-attr="{{route('create_bet', ['id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Typujesz wynik">Typuj wynik</button>@elseif($match->getStatus() == 'SCHEDULED' && isset($bets[$typer->id][Auth::id()][$match->getId()]) ) <button type="button" class="btn btn-primary waves-effect waves-themed create-bet" data-attr="{{route('edit_bet', ['bet'=>$bets[$typer->id][Auth::id()][$match->getId()]])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Edytujesz typ">Edytuj typ</button> @else <button type="button"  class="btn btn-primary waves-effect waves-themed show-bets-list" data-attr="{{route('match_bet_list', ['match_id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="{{$match->getHomeTeam()->getName()}} {{$match->getFullTimeScore()->getHomeTeamScore()}} : {{$match->getFullTimeScore()->getAwayTeamScore()}} {{$match->getAwayTeam()->getName()}}">Pokaż typy</button> @endif</td>
+                                                            <td><a href="{{route('show_competition_details', ['id' => $match->getCompetition()->getId()])}}">{{$match->getCompetition()->getName()}}</a></td>
+	                                                        <td><a href="{{route('show_match_details', ['id' => $match->getId()])}}" id="match-{{$match->getId()}}" class="badge badge-primary">Pokaż więcej</a></td>
                                                         </tr>
                                                         @endforeach
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
                                                             <th>Godzina</th>
-                                                            <th>Drużyny</th>
+                                                            <th>Gospodarz</th>
+                                                            <th>Gość</th>
                                                             <th>Wynik</th>
-                                                            <th>Twój typ</th>
-                                                            <th>Pytanie</th>
                                                             <th>Status</th>
+                                                            <th>Rozgrywki</th>
                                                             <th></th>
                                                         </tr>
                                                     </tfoot>
@@ -379,82 +379,6 @@
                 })
             });
 
-            $(document).on('click', '.create-bet', function(event) {
-                event.preventDefault();
-                var title = $(this).attr('data-title');
-                let href = $(this).attr('data-attr');
-                $.ajax({
-                    url: href,
-                    beforeSend: function() {
-                        $('#loader').show();
-                        $('.default-example-modal-right-lg .modal-body').html('');
-                    },
-                    // return the result
-                    success: function(result) {
-                        $('.default-example-modal-right-lg').modal("show");
-                        $('.default-example-modal-right-lg .modal-body').html(result).show();
-                        $('.default-example-modal-right-lg .modal-title').text(title);
-
-                        $('table[id^=dt-standing]').dataTable(
-                        {
-                            bLengthChange: true,
-                                "lengthMenu": [ [10, 20, -1], [10, 20, "All"] ],
-                                "iDisplayLength": 20,
-                                bInfo: false,
-                                responsive: true,
-                                "bAutoWidth": false
-                        });
-                    },
-                    complete: function() {
-                        $('#loader').hide();
-                    },
-                    error: function(jqXHR, testStatus, error) {
-                        console.log(error);
-                        alert("Page " + href + " cannot open. Error:" + error);
-                        $('#loader').hide();
-                    },
-                    timeout: 8000
-                })
-            });
-
-            $(document).on('click', '.show-bets-list', function(event) {
-                event.preventDefault();
-                var title = $(this).attr('data-title');
-                let href = $(this).attr('data-attr');
-                $.ajax({
-                    url: href,
-                    beforeSend: function() {
-                        $('#loader').show();
-                        $('.default-example-modal-right-lg .modal-body').html('');
-                    },
-                    // return the result
-                    success: function(result) {
-                        $('.default-example-modal-right-lg').modal("show");
-                        $('.default-example-modal-right-lg .modal-body').html(result).show();
-                        $('.default-example-modal-right-lg .modal-title').text(title);
-
-                        $('table[id^=dt-bets]').dataTable(
-                        {
-                            bLengthChange: true,
-                                "lengthMenu": [ [10, 20, -1], [10, 20, "All"] ],
-                                "iDisplayLength": 20,
-                                bInfo: false,
-                                responsive: true,
-                                "bAutoWidth": false
-                        });
-                    },
-                    complete: function() {
-                        $('#loader').hide();
-                    },
-                    error: function(jqXHR, testStatus, error) {
-                        console.log(error);
-                        alert("Page " + href + " cannot open. Error:" + error);
-                        $('#loader').hide();
-                    },
-                    timeout: 8000
-                })
-            });
-
 
             $(document).on('click', 'a[id^=match-]', function(event) {
                 event.preventDefault();
@@ -483,54 +407,6 @@
                     },
                     timeout: 8000
                 })
-            });
-
-
-
-            $(document).on('click', '#save-bet-button', function(event) {
-                event.preventDefault();
-                $.ajax({
-                    /* the route pointing to the post function */
-                    url: "{{route('store_bet')}}",
-                    type: 'POST',
-                    /* send the csrf-token and the input to the controller */
-                    data: $('#create-bet-form').serialize(),
-                    dataType: 'JSON',
-                    /* remind that 'data' is the response of the AjaxController */
-                    success: function (data) { 
-                        alert(data.msg);
-                    },
-                    error:function(data){
-                        obj = data.responseJSON.errors;
-                        $.each(obj, function(key,value) {
-                            $("input[name='"+key+"']").parent().addClass('alert').addClass('alert-danger');
-                            $("input[name='"+key+"']").siblings('span').text(value);
-                        });
-                    }
-                }); 
-            });
-
-            $(document).on('click', '#update-bet-button', function(event) {
-                event.preventDefault();
-                $.ajax({
-                    /* the route pointing to the post function */
-                    url: "{{route('update_bet')}}",
-                    type: 'POST',
-                    /* send the csrf-token and the input to the controller */
-                    data: $('#edit-bet-form').serialize(),
-                    dataType: 'JSON',
-                    /* remind that 'data' is the response of the AjaxController */
-                    success: function (data) { 
-                        alert(data.msg);
-                    },
-                    error:function(data){
-                        obj = data.responseJSON.errors;
-                        $.each(obj, function(key,value) {
-                            $("input[name='"+key+"']").parent().addClass('alert').addClass('alert-danger');
-                            $("input[name='"+key+"']").siblings('span').text(value);
-                        });
-                    }
-                }); 
             });
 
             // $(document).on('click', '#matches-modal-button', function(event) {
@@ -582,37 +458,27 @@
                     }
                 });
 
-
-
-                $("table[id^=dt-basic-example]").dataTable(
-                {
-                    responsive: false
-
-                });
-
-                $('#dt-matches thead tr').clone(true).appendTo('#dt-matches thead');
-                $('#dt-matches thead tr:eq(1) th').each(function(i)
-                {
-                    var title = $(this).text();
-                    $(this).html('<input type="text" class="form-control form-control-sm" placeholder="Search ' + title + '" />');
-
-                    $('input', this).on('keyup change', function()
-                    {
-                        if (table.column(i).search() !== this.value)
-                        {
-                            table
-                                .column(i)
-                                .search(this.value)
-                                .draw();
-                        }
-                    });
-                });
-
-                var table = $('#dt-matches').DataTable(
+                var table = $('table[id^=dt-matchday]').DataTable(
                 {
                     responsive: true,
                     orderCellsTop: true,
                     fixedHeader: true,
+                    rowGroup:
+                    {
+                        dataSrc: 5
+                    },
+			        "columnDefs": [
+			            {
+			                "targets": [ 5 ],
+			                "visible": false,
+			                "searchable": true
+			            }
+			        ],
+                    order: [
+                        [5, 'asc'],
+                        [0, 'asc'],
+                    ],			        
+
                 });                
 
                 $('.js-thead-colors a').on('click', function()

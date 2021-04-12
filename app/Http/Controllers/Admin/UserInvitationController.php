@@ -26,7 +26,7 @@ class UserInvitationController extends Controller
 
         InvitationNotification::dispatch($typer, $user);
 
-    	return view('front.toast', compact('user'));
+    	return view('front.inc.toast', compact('user'));
     }
 
 

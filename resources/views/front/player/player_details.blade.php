@@ -40,7 +40,7 @@
                 <!-- END Left Aside -->
                 <div class="page-content-wrapper">
                     <!-- BEGIN Page Header -->
-					@include('front.header')
+					@include('front.inc.header')
                     <!-- END Page Header -->
                     <!-- BEGIN Page Content -->
                     <!-- the #js-page-content id is needed for some plugins to initialize -->
@@ -99,7 +99,7 @@
                     <!-- this overlay is activated only when mobile menu is triggered -->
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
                     <!-- BEGIN Page Footer -->
-                    @include('front.footer')
+                    @include('front.inc.footer')
                     <!-- END Page Footer -->
                     <!-- BEGIN Shortcuts -->
                     @include('front.nav.shortcuts')

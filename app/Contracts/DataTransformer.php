@@ -20,6 +20,8 @@ interface DataTransformer
 
 	public function transformToCompetitionMatches($webServiceResponse): Competition;
 
+	public function transformToCompetitionMatchesArray($webServiceResponse): array;
+
 	public function transformToCompetitionScorers($webServiceResponse): Competition;
 
 	public function transformToMatchesList($webServiceResponse);

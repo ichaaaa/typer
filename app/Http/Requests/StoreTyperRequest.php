@@ -14,7 +14,7 @@ class StoreTyperRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->hasRole('developer');
+        return Auth::user()->hasRole('admin');
     }
 
     /**

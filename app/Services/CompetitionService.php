@@ -3,12 +3,16 @@
 namespace App\Services;
 
 use App\Objects\Competition;
+use App\Objects\Schedule;
 use App\Services\DataProviderService;
+use App\Services\GroupByDateTrait;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
 class CompetitionService extends DataProviderService
 {
+
+	use GroupByDateTrait;
 
 	public function findAll()
 	{
@@ -36,6 +40,13 @@ class CompetitionService extends DataProviderService
 	public function findWithMatches($id)
 	{
 		return $this->dataTransformer->transformToCompetitionMatches($this->webServiceClient->getCompetitionMatches($id));
+	}
+
+	public function findWithMatchesByDate($id)
+	{
+		$matches = $this->dataTransformer->transformToCompetitionMatchesArray($this->webServiceClient->getCompetitionMatches($id));
+
+		return $this->groupByDate($matches);
 	}
 
 }

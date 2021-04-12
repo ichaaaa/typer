@@ -20,7 +20,7 @@ class CompetitionScorersController extends Controller
     public function index($competition_id, CompetitionService $service)
     {
         $scorers = $service->findWithScorers($competition_id);
-        return view('front.scorers', compact('scorers'));
+        return view('front.inc.scorers', compact('scorers'));
     }
 
 }

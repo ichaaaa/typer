@@ -2,9 +2,9 @@
 
 @section('content')
 
-@role('manager')
+@role('admin')
 
- Hello developer
+ Hello admin
 
 @endrole
 
@@ -40,7 +40,7 @@
                 <!-- END Left Aside -->
                 <div class="page-content-wrapper">
                     <!-- BEGIN Page Header -->
-					@include('front.header')
+					@include('front.inc.header')
                     <!-- END Page Header -->
                     <!-- BEGIN Page Content -->
                     <!-- the #js-page-content id is needed for some plugins to initialize -->
@@ -67,6 +67,7 @@
                                             Typery
                                         </h2>
                                         <div class="panel-toolbar">
+                                            <div class="btn-group" role="group" aria-label="Basic example"><a href="{{route('create_typer')}}"><button type="button" id="scorers-modal-button" class="btn btn-primary" data-toggle="modal" data-target=".default-example-modal-right-lg">Nowy</button></a></div>
                                             <button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
                                             <button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
                                             <button class="btn btn-panel" data-action="panel-close" data-toggle="tooltip" data-offset="0,10" data-original-title="Close"></button>
@@ -110,7 +111,7 @@
                     <!-- this overlay is activated only when mobile menu is triggered -->
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
                     <!-- BEGIN Page Footer -->
-                    @include('front.footer')
+                    @include('front.inc.footer')
                     <!-- END Page Footer -->
                     <!-- BEGIN Shortcuts -->
                     @include('front.nav.shortcuts')

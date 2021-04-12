@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Bet;
 use App\Permissions\HasPermissionsTrait;
 use App\Typer;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -45,6 +46,11 @@ class User extends Authenticatable
     public function typers()
     {
         return $this->belongsToMany(Typer::class, 'typers_users')->withPivot('confirmed', 'banned', 'payed', 'verified', 'token', 'verified_at');
+    }
+
+    public function bets()
+    {
+        return $this->hasMany(Bet::class);
     }
 
     public function verifiedTyper($typer_id)

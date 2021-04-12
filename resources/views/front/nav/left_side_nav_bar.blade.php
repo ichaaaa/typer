@@ -18,11 +18,11 @@
                             </div>
                         </div>
                         <div class="info-card">
-                            <img src="{{asset('img/demo/avatars/avatar-admin.png')}}" class="profile-image rounded-circle" alt="Dr. Codex Lantern">
+                            <img src="{{asset('img/demo/avatars/avatar-admin.png')}}" class="profile-image rounded-circle" alt="{{Auth::user()->name}}">
                             <div class="info-card-text">
                                 <a href="#" class="d-flex align-items-center text-white">
                                     <span class="text-truncate text-truncate-sm d-inline-block">
-                                        Dr. Codex Lantern
+                                        {{Auth::user()->name}}
                                     </span>
                                 </a>
                                 <span class="d-inline-block text-truncate text-truncate-sm">Toronto, Canada</span>
@@ -33,112 +33,76 @@
                             </a>
                         </div>
                         <ul id="js-nav-menu" class="nav-menu">
+                            @role('admin')
                             <li class="active open">
-                                <a href="#" title="Application Intel" data-filter-tags="application intel">
+                                <a href="#" title="Administracja" data-filter-tags="administracja">
                                     <i class="fal fa-info-circle"></i>
-                                    <span class="nav-link-text" data-i18n="nav.application_intel">Application Intel</span>
+                                    <span class="nav-link-text" data-i18n="nav.application_intel">Administracja</span>
                                 </a>
                                 <ul>
                                     <li class="active">
-                                        <a href="intel_analytics_dashboard.html" title="Analytics Dashboard" data-filter-tags="application intel analytics dashboard">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_analytics_dashboard">Analytics Dashboard</span>
+                                        <a href="{{route('data_provider_list')}}" title="API" data-filter-tags="administracja api">
+                                            <span class="nav-link-text" data-i18n="nav.application_intel_analytics_dashboard">API</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="intel_marketing_dashboard.html" title="Marketing Dashboard" data-filter-tags="application intel marketing dashboard">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_marketing_dashboard">Marketing Dashboard</span>
+                                        <a href="{{route('typer_list')}}" title="Typery" data-filter-tags="administracja typery">
+                                            <span class="nav-link-text" data-i18n="nav.application_intel_marketing_dashboard">Typery</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{route('home')}}" title="Introduction" data-filter-tags="application intel introduction">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_introduction">Introduction</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="intel_privacy.html" title="Privacy" data-filter-tags="application intel privacy">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_privacy">Privacy</span>
+                                        <a href="#" title="Użytkownicy" data-filter-tags="administracja uzytkownicy">
+                                            <span class="nav-link-text" data-i18n="nav.application_intel_introduction">Użytkownicy</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+                            @endrole
+                            @role('user')
                             <li>
-                                <a href="#" title="Theme Settings" data-filter-tags="theme settings">
+                                <a href="#" title="Typery" data-filter-tags="typery">
                                     <i class="fal fa-cog"></i>
-                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Theme Settings</span>
+                                    <span class="nav-link-text" data-i18n="nav.theme_settings">Typery</span>
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="settings_how_it_works.html" title="How it works" data-filter-tags="theme settings how it works">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">How it works</span>
+                                        <a href="{{route('visible_for_user_typers_list')}}" title="Zapisane" data-filter-tags="typery zapisane">
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_how_it_works">Zapisane</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="settings_layout_options.html" title="Layout Options" data-filter-tags="theme settings layout options">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Layout Options</span>
+                                        <a href="{{route('available_for_user_typers_list')}}" title="Dostępne" data-filter-tags="typery dostepne">
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_layout_options">Dostępne</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="settings_theme_modes.html" title="Theme Modes (beta)" data-filter-tags="theme settings theme modes (beta)">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Theme Modes (beta)</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="settings_skin_options.html" title="Skin Options" data-filter-tags="theme settings skin options">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_skin_options">Skin Options</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="settings_saving_db.html" title="Saving to Database" data-filter-tags="theme settings saving to database">
-                                            <span class="nav-link-text" data-i18n="nav.theme_settings_saving_to_database">Saving to Database</span>
+                                        <a href="{{route('not_confirmed_user_typers_list')}}" title="Oczekujące" data-filter-tags="typery oczekujace">
+                                            <span class="nav-link-text" data-i18n="nav.theme_settings_theme_modes_(beta)">Oczekujące</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+
                             <li>
-                                <a href="#" title="Documentation" data-filter-tags="documentation">
+                                <a href="#" title="Informacje z boisk" data-filter-tags="informacje z boisk">
                                     <i class="fal fa-book"></i>
-                                    <span class="nav-link-text" data-i18n="nav.documentation">Documentation</span>
+                                    <span class="nav-link-text" data-i18n="nav.documentation">Informacje z boisk</span>
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="docs_general.html" title="General Docs" data-filter-tags="documentation general docs">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_general_docs">General Docs</span>
+                                        <a href="{{route('competitions_list')}}" title="Rozgrywki" data-filter-tags="informacje z boisk rozgrywki">
+                                            <span class="nav-link-text" data-i18n="nav.documentation_general_docs">Rozgrywki</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="docs_project_structure.html" title="Project Structure" data-filter-tags="documentation project structure">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_project_structure">Project Structure</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="docs_flavors_editions.html" title="Flavors & Editions" data-filter-tags="documentation flavors & editions">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_flavors_&_editions">Flavors & Editions</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="docs_community_support.html" title="Community Support" data-filter-tags="documentation community support">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_community_support">Community Support</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="docs_premium_support.html" title="Premium Support" data-filter-tags="documentation premium support">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_premium_support">Premium Support</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="docs_licensing.html" title="Licensing" data-filter-tags="documentation licensing">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_licensing">Licensing</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="docs_buildnotes.html" title="Build Notes" data-filter-tags="documentation build notes">
-                                            <span class="nav-link-text" data-i18n="nav.documentation_build_notes">Build Notes</span>
-                                            <span class="">v4.5.1</span>
+                                        <a href="{{route('matches_list')}}" title="Project Structure" data-filter-tags="informacje z boisk mecze">
+                                            <span class="nav-link-text" data-i18n="nav.documentation_project_structure">Mecze</span>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-title">Tools & Components</li>
+                            @endrole                            
+<!--                             <li class="nav-title">Tools & Components</li>
                             <li>
                                 <a href="#" title="UI Components" data-filter-tags="ui components">
                                     <i class="fal fa-window"></i>
@@ -918,7 +882,7 @@
                                             <span class="nav-link-text" data-i18n="nav.pages_search_results">Search Results</span>
                                         </a>
                                     </li>
-                                </ul>
+ -->                                </ul>
                             </li>
                         </ul>
                         <div class="filter-message js-filter-message bg-success-600"></div>

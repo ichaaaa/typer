@@ -145,7 +145,7 @@ class Competition
      */
     public function getLastUpdated()
     {
-        return Carbon::parse($this->lastUpdated)->format('Y-m-d H:i:s');
+        return Carbon::parse($this->lastUpdated)->timezone('Europe/Warsaw')->format('Y-m-d H:i:s');
     }
 
     /**

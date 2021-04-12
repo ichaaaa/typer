@@ -44,7 +44,7 @@
                 <!-- END Left Aside -->
                 <div class="page-content-wrapper">
                     <!-- BEGIN Page Header -->
-					@include('front.header')
+					@include('front.inc.header')
                     <!-- END Page Header -->
                     <!-- BEGIN Page Content -->
                     <!-- the #js-page-content id is needed for some plugins to initialize -->
@@ -93,7 +93,9 @@
                                                 </thead>
                                                 <tbody>
                                                     @forelse($competition->getMatches() as $match)
-                                                    <tr>
+                                                    
+
+                                                    <tr @if($match->getStatus() == 'SCHEDULED')class="scheduled"@endif>
                                                         <td>{{$match->getDate()}}</td>
                                                         <td><a href="{{route('show_team_details',['id' => $match->getHomeTeam()->getId()])}}" >{{$match->getHomeTeam()->getName()}}</a></td>
                                                         <td><a href="{{route('show_team_details',['id' => $match->getAwayTeam()->getId()])}}" >{{$match->getAwayTeam()->getName()}}</a></td>
@@ -101,6 +103,7 @@
                                                         <td>{{$match->getStatus()}}</td>
                                                         <td><a href="{{route('show_match_details', ['id' => $match->getId()])}}" id="match-{{$match->getId()}}" class="badge badge-primary">Pokaż więcej</a></td>
                                                     </tr>
+                                                    
                                                     @empty
 
                                                     @endforelse
@@ -125,7 +128,7 @@
                     <!-- this overlay is activated only when mobile menu is triggered -->
                     <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div> <!-- END Page Content -->
                     <!-- BEGIN Page Footer -->
-                    @include('front.footer')
+                    @include('front.inc.footer')
                     <!-- END Page Footer -->
                     <!-- BEGIN Shortcuts -->
                     @include('front.nav.shortcuts')
@@ -334,7 +337,15 @@
                     responsive: true,
                     orderCellsTop: true,
                     fixedHeader: true,
-                });                
+
+                });
+                var indexes = table.rows('.scheduled').indexes();
+                var elementNum = indexes[0] + 1;
+                var page = Math.ceil(elementNum/table.page.info().length) - 1;
+                //console.log(page);
+                //console.log(table.page.info());
+
+                table.page(page).draw('page');
 
                 $('.js-thead-colors a').on('click', function()
                 {

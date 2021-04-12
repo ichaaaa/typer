@@ -28,10 +28,11 @@ class DashboardController extends Controller
     public function index()
     {
 
-        dd(DataProvider::active()->firstOrFail()->id);
-        $webClient = new FootballDataWebServiceClient();
-        $transformer = new FootballDataDataTransformer();
-        dd($transformer->transformToCompetitionScorers($webClient->getCompetitionScorers('PL')));
+        // dd(DataProvider::active()->firstOrFail()->id);
+        // $webClient = new FootballDataWebServiceClient();
+        // $transformer = new FootballDataDataTransformer();
+        // dd($transformer->transformToCompetitionScorers($webClient->getCompetitionScorers('PL')));
+        // dd($transformer->transformToCompetitionScorers($webClient->getCompetitionScorers('PL')));
         return view('front.dashboard');
     }
 

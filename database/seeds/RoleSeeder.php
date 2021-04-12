@@ -16,15 +16,15 @@ class RoleSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');        
         App\Role::create(
         	[
-        	'slug' => 'developer',
-        	'name' => 'Front-end Developer',
+        	'slug' => 'admin',
+        	'name' => 'Administrator',
         	]
         );
 
         App\Role::create(
         	[
-        	'slug' => 'manager',
-        	'name' => 'Assistant Manager',
+        	'slug' => 'user',
+        	'name' => 'Użytkownik',
         	]
         );
     }

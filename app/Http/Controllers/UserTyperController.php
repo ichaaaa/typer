@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Bet;
 use App\Jobs\ApplicationToTyperNotification;
 use App\Notifications\UserTyperApplicationNotification;
+use App\Objects\Game;
+use App\Services\BetTransformerService;
 use App\Services\CompetitionService;
+use App\Services\MatchService;
 use App\Typer;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +26,12 @@ class UserTyperController extends Controller
     public function show(Typer $typer, CompetitionService $service)
     {
         $competition = $typer->getCompetition($service);
-        return view('front.typer.typer_details', compact('competition'));
+        $matches = $service->findWithMatchesByDate($competition->getId());
+
+        $closestDate = Game::findClosestMatchDate(array_keys($matches));
+
+        $bets = BetTransformerService::getArrayByMatch($typer->id, Auth::id());
+        return view('front.typer.typer_details', compact(['competition', 'matches', 'closestDate', 'typer', 'bets']));
     }
 
     public function store(Typer $typer)

@@ -21,6 +21,6 @@ class PlayerMatchesController extends Controller
     {
     	$matches = $service->findWithMatches($id);
 
-    	return view('front.matches', compact('matches'));
+    	return view('front.inc.matches', compact('matches'));
     }
 }

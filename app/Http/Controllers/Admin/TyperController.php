@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Bet;
 use App\DataProvider;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTyperRequest;
@@ -21,7 +22,7 @@ class TyperController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth', 'role:developer']);
+        $this->middleware(['auth', 'role:admin']);
     }	
 
 	public function index(CompetitionService $service)
@@ -47,7 +48,7 @@ class TyperController extends Controller
 		$competitions = $service->findAll();
 		$visibilityTypes = VisibilityType::all();
 
-		return view('admin.typer_create', compact(['competitions','visibilityTypes']));
+		return view('admin.typer_create', compact(['competitions', 'visibilityTypes']));
 	}
 
     public function store(StoreTyperRequest $request)
