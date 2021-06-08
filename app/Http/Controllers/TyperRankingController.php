@@ -15,7 +15,7 @@ class TyperRankingController extends Controller
     public function index(Typer $typer)
     {
     	$ranking = TyperUserRankingService::getRankingData($typer->id);
-dd($ranking);
+    	
     	return view('admin.ranking', compact('ranking'));
     }
 }

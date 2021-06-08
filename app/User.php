@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 
 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     use HasPermissionsTrait;
@@ -100,7 +100,7 @@ class User extends Authenticatable
     public function scopeAdmin($query)
     {
         return $query->whereHas('roles', function ($query) {
-             $query->where('slug', '=', 'developer');
+             $query->where('slug', '=', 'admin');
         });
     }
 }

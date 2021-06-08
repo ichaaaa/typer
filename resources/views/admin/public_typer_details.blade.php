@@ -70,7 +70,7 @@
 
                                     <div class="panel-hdr">
                                         <h2>
-                                            Szczegóły
+                                            {{$typer->name}}
                                         </h2>
 
                                     </div>
@@ -93,11 +93,11 @@
                             </div>
                         </div>
                         <div class="row">
-                        	<div class="col-xl-8">
+                        	<div class="col-xl-12">
                                 <div id="panel-1" class="panel">
                                     <div class="panel-hdr">
                                         <h2>
-                                            Zgłoszeni uczestnicy
+                                            Zarządzaj
                                         </h2>
                                         <div class="panel-toolbar">
 
@@ -108,6 +108,20 @@
                                     </div>
                                     <div class="panel-container show">
                                         <div class="panel-content">
+
+                                        <div class="tab-slider">                                            
+                                            <div class="wrap">
+                                                <ul class="nav nav-pills nav-justified" role="tablist" id="menus">
+
+                                                
+                                                    <li class="nav-item"><a class="nav-link active" id="users_list" data-toggle="tab" href="#tab-1">Zarządzaj uczestnikami</a></li>
+                                                    <li class="nav-item"><a class="nav-link" id="matches-to-check" data-toggle="tab" href="#tab-2">Przelicz punkty</a></li>
+                                                    <li class="nav-item"><a class="nav-link" id="ranking" data-toggle="tab" href="#tab-3">Tabela</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="tab-content py-3">
+                                            <div class="tab-pane active show" id="tab-1" role="tabpanel">
                                             <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
                                                 <thead>
                                                     <tr>
@@ -147,6 +161,13 @@
                                                     </tr>
                                                 </tfoot>
                                             </table>
+
+                                        </div>
+                                        <div class="tab-pane" id="tab-2" role="tabpanel">Mecze do kliknięcia</div>
+                                        <div class="tab-pane" id="tab-3" role="tabpanel">Ludzie</div>
+                                        </div>
+
+
                                         </div>
                                     </div>
                         	   </div>
@@ -169,6 +190,7 @@
                 </div>
             </div>
         </div>
+        @include('admin.modal.right_large_modal')
         <!-- END Page Wrapper -->
         <!-- BEGIN Quick Menu -->
         <!-- to add more items, please make sure to change the variable '$menu-items: number;' in your _page-components-shortcut.scss -->
@@ -236,15 +258,92 @@
                 })
             });
 
+            $(document).on('click', '.ban-user-button', function(event) {
+                event.preventDefault();
+                //var title = $(this).attr('data-title');
+                let href = $(this).attr('data-attr');
+                $.ajax({
+                    url: href,
+                    beforeSend: function() {
+                        //$('#loader').show();
+                        $('.default-example-modal-right-lg .modal-body').html('');
+                    },
+                    // return the result
+                    success: function(result) {
+                        $('.default-example-modal-right-lg').modal("show");
+                        $('.default-example-modal-right-lg .modal-body').html(result).show();
+
+                    },
+                    complete: function() {
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                    },
+                    timeout: 8000
+                })
+            });            
+
+            $(document).on('click', '#matches-to-check', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '{{route('show_matches_for_admin', ['typer'=>$typer])}}',
+                    // beforeSend: function() {
+                    //     //$('#loader').show();
+                    //     $('#tab-2').html('');
+                    // },
+                    // return the result
+                    success: function(result) {
+                        //$('.default-example-modal-right-lg').modal("show");
+                        $('#tab-2').html(result).show();
+
+                    },
+                    complete: function() {
+                        $('#matches-to-check').removeAttr('id');
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                    },
+                    timeout: 8000
+                })
+            });
+
+            $(document).on('click', '#ranking', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '{{route('typer_ranking_list', ['typer'=>$typer])}}',
+                    // beforeSend: function() {
+                    //     //$('#loader').show();
+                    //     $('#tab-2').html('');
+                    // },
+                    // return the result
+                    success: function(result) {
+                        //$('.default-example-modal-right-lg').modal("show");
+                        $('#tab-3').html(result).show();
+
+                    },
+                    complete: function() {
+                        $('#ranking').removeAttr('id');
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                    },
+                    timeout: 8000
+                })
+            });
+
             $(document).ready(function()
             {
+                $("#users_list").tab('show');
                 $("table[id^=dt-basic-example]").dataTable(
                 {
                     responsive: false
-
                 });
-
-            });
+            });            
 
         </script>
         @endsection

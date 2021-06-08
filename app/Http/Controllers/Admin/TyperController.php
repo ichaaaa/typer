@@ -34,7 +34,9 @@ class TyperController extends Controller
 
 	public function show(Typer $typer, CompetitionService $service)
 	{
-		$users = User::all();
+		$users = User::whereHas('roles',  function($query){
+			return $query->where('slug', 'user');
+		})->get();
 
 		if($typer->visibility->private){
 			return view('admin.private_typer_details', compact(['typer', 'service', 'users']));

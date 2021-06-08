@@ -2,6 +2,65 @@
 
 @section('css')
         <link rel="stylesheet" media="screen, print" href="{{asset('css/datagrid/datatables/datatables.bundle.css')}}">
+        <link rel="stylesheet" media="screen, print" href="{{asset('css/fa-solid.css')}}">
+
+        <style type="text/css">
+            
+            .tab-slider {
+              padding: 0 40px;
+            }
+
+            .tab-slider .btn-icon {
+              position: absolute;
+              top: 70px;
+            }
+
+            #goPrev {
+                left:0;
+            }
+            #goNext {
+                right:0;
+            }
+            .wrap {
+                overflow: hidden;
+                position: relative;
+                white-space: nowrap;
+                width: 100%;
+                border: 1px solid #efefef;
+                font-size: 0;
+            }
+
+            .nav-pills>li.active>a,
+            .nav-pills>li.active>a:focus,
+            .nav-pills>li.active>a:hover {
+                border: 1px solid transparent;
+            }
+
+            .wrap>.nav-pills {
+                display: inline-block;
+                padding: 0;
+                margin: 0;
+                position: relative;
+                top: 0;
+                left: 0;
+            }
+
+            .wrap>.nav-pills>li {
+                background: #fff;
+                display: inline-block;
+                position: relative;
+                white-space: normal;
+                float: none;
+                font-size: 14px;
+            }
+
+            .nav-pills>li>a {
+                margin-right: 0;
+                border-radius: 0;
+            }
+
+        </style>
+
 @endsection
 
 @section('content')
@@ -70,7 +129,7 @@
 
                                     <div class="panel-hdr">
                                         <h2>
-                                            Szczegóły prywatne
+                                            {{$typer->name}}
                                         </h2>
 
                                     </div>
@@ -110,65 +169,64 @@
                                     </div>
                                     <div class="panel-container show">
                                         <div class="panel-content">
-                                        <div class="tab-slider">                                            
-                                            <div class="wrap">
-                                                <ul class="nav nav-pills nav-justified" role="tablist" id="menus">
-
-                                                
-                                                    <li class="nav-item"><a class="nav-link active" id="users_list" data-toggle="tab" href="#tab-1">Zarządzaj uczestnikami</a></li>
-                                                    <li class="nav-item"><a class="nav-link" id="matches-to-check" data-toggle="tab" href="#tab-2">Przelicz punkty</a></li>
-                                                    <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-3">Tabela</a></li>
-                                                </ul>
+                                            <div class="tab-slider">                                            
+                                                <div class="wrap">
+                                                    <ul class="nav nav-pills nav-justified" role="tablist">
+                                                        <li class="nav-item"><a class="nav-link active" id="users_list" data-toggle="tab" href="#tab-1">Uczestnicy</a></li>
+                                                        <li class="nav-item"><a class="nav-link" id="matches-to-check" data-toggle="tab" href="#tab-2">Mecze</a></li>
+                                                        <li class="nav-item"><a class="nav-link" id="ranking" data-toggle="tab" href="#tab-3">Tabela</a></li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="tab-content py-3">
-                                            <div class="tab-pane active show" id="tab-1" role="tabpanel">
-                                            <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Lp.</th>
-                                                        <th>Nazwa</th>
-                                                        <th>Email</th>
-                                                        <th>Potwierdził</th>
-                                                        <th>Zapłacone</th>
-                                                        <th>Zbanowany</th>
-                                                        <th>Opcje</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                	@foreach($users as $user)
-                                                    <tr>
-                                                        <th>{{$loop->iteration}}</th>
-                                                        <th>{{$user->name}}</th>
-                                                        <th>{{$user->email}}</th>
-                                                        <th><p class="@if($typer->confirmedUser($user))text-success"> TAK @else text-danger">NIE @endif</p></th>
-                                                        <th>NIE</th>
-                                                        <th>NIE</th>
-                                                        <th><div class="btn-group" role="group"><button type="button" @if( $typer->hasUser($user) ) disabled="disabled" @endif data-attr="{{route('invite_user_to_typer', ['typer'=>$typer, 'user'=>$user])}}" class="btn btn-primary invite-user-button">Zaproś</button><button type="button" data-attr="{{route('ban_user_from_typer_form_create', ['typer'=>$typer, 'user'=>$user])}}" class="btn btn-danger ban-user-button">Zbanuj</button></div></th>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Lp.</th>
-                                                        <th>Nazwa</th>
-                                                        <th>Email</th>
-                                                        <th>Potwierdził</th>
-                                                        <th>Zapłacone</th>
-                                                        <th>Zbanowany</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                        <div class="tab-pane" id="tab-2" role="tabpanel">Mecze do kliknięcia</div>
-                                        <div class="tab-pane" id="tab-3" role="tabpanel">Ludzie</div>
-                                        </div>
+                                            <div class="tab-content py-3">
+                                                <div class="tab-pane active show" id="tab-1" role="tabpanel">
+                                                    <table id="dt-basic-example" class="table table-bordered table-hover table-striped w-100">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Lp.</th>
+                                                                <th>Nazwa</th>
+                                                                <th>Email</th>
+                                                                <th>Potwierdził</th>
+                                                                <th>Zapłacone</th>
+                                                                <th>Zbanowany</th>
+                                                                <th>Opcje</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        	@foreach($users as $user)
+                                                            <tr>
+                                                                <th>{{$loop->iteration}}</th>
+                                                                <th>{{$user->name}}</th>
+                                                                <th>{{$user->email}}</th>
+                                                                <th><p class="@if($typer->confirmedUser($user))text-success"> TAK @else text-danger">NIE @endif</p></th>
+                                                                <th>NIE</th>
+                                                                <th>NIE</th>
+                                                                <th><div class="btn-group" role="group"><button type="button" @if( $typer->hasUser($user) ) disabled="disabled" @endif data-attr="{{route('invite_user_to_typer', ['typer'=>$typer, 'user'=>$user])}}" class="btn btn-primary invite-user-button">Zaproś</button><button type="button" data-attr="{{route('ban_user_from_typer_form_create', ['typer'=>$typer, 'user'=>$user])}}" class="btn btn-danger ban-user-button">Zbanuj</button></div></th>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>Lp.</th>
+                                                                <th>Nazwa</th>
+                                                                <th>Email</th>
+                                                                <th>Potwierdził</th>
+                                                                <th>Zapłacone</th>
+                                                                <th>Zbanowany</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                                <div class="tab-pane" id="tab-2" role="tabpanel">Mecze do kliknięcia</div>
+                                                <div class="tab-pane" id="tab-3" role="tabpanel">Ludzie</div>
+                                            </div>
                                         </div>
                                     </div>
                         	   </div>
                             </div>
                         </div>
+
 												<div id="toast-container" style="position: fixed; top: 0; right: 10px;">
                                                     <!-- Then put toasts within -->
 <!--                                                     <div class="toast fade hide" role="alert" data-autohide="false" aria-live="assertive" aria-atomic="true" data-toggle="toast">
@@ -299,11 +357,12 @@
                 })
             });
 
+
             $(document).on('click', '#matches-to-check', function(event) {
                 event.preventDefault();
 
                 $.ajax({
-                    url: '{{route('show_matches_without_bet_result', ['typer'=>$typer])}}',
+                    url: '{{route('show_matches_for_admin', ['typer'=>$typer])}}',
                     // beforeSend: function() {
                     //     //$('#loader').show();
                     //     $('#tab-2').html('');
@@ -325,14 +384,71 @@
                 })
             });
 
+            $(document).on('click', '#ranking', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: '{{route('typer_ranking_list', ['typer'=>$typer])}}',
+                    // beforeSend: function() {
+                    //     //$('#loader').show();
+                    //     $('#tab-2').html('');
+                    // },
+                    // return the result
+                    success: function(result) {
+                        //$('.default-example-modal-right-lg').modal("show");
+                        $('#tab-3').html(result).show();
+
+                    },
+                    complete: function() {
+                        $('#ranking').removeAttr('id');
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                    },
+                    timeout: 8000
+                })
+            });
+
             $(document).on('click', '.close', function(event) {
                 event.preventDefault();
                 $(this).parent().parent().remove();
 			});
 
+
+            $(document).on('change', '.question-type', function(event){
+                //event.preventDefault();
+                type = $(this).val();
+
+                $.ajax({
+                    url: '/admin/question-type/'+type+'/create',
+
+                    // beforeSend: function() {
+                    //     //$('#loader').show();
+                    //     $('#tab-2').html('');
+                    // },
+                    // return the result
+                    success: function(result) {
+                        //$('.default-example-modal-right-lg').modal("show");
+                        $('.question-type-details').html(result).show();
+
+                    },
+                    complete: function() {
+
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                    },
+                    timeout: 8000
+                })
+
+            });
+
             $(document).ready(function()
             {
                 $("#users_list").tab('show');
+
                 $("table[id^=dt-basic-example]").dataTable(
                 {
                     responsive: false

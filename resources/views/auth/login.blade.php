@@ -11,20 +11,20 @@
                             <div class="page-logo width-mobile-auto m-0 align-items-center justify-content-center p-0 bg-transparent bg-img-none shadow-0 height-9 border-0">
                                 <a href="javascript:void(0)" class="page-logo-link press-scale-down d-flex align-items-center">
                                     <img src="{{asset('img/logo.png')}}" alt="SmartAdmin WebApp" aria-roledescription="logo">
-                                    <span class="page-logo-text mr-1">SmartAdmin WebApp</span>
+                                    <span class="page-logo-text mr-1">Typer</span>
                                 </a>
                             </div>
-                            <a href="{{ route('register') }}" class="btn-link text-white ml-auto">
-                                Create Account
+                            <a href="" class="btn-link text-white ml-auto">
+                                Rejestracja
                             </a>
                         </div>
                     </div>
                     <div class="flex-1" style="background: url({{asset('img/svg/pattern-1.svg')}}) no-repeat center bottom fixed; background-size: cover;">
                         <div class="container py-4 py-lg-5 my-lg-5 px-4 px-sm-0">
-                            <div class="row">
-                                <div class="col col-md-6 col-lg-7 hidden-sm-down">
+                            <div class="row d-flex justify-content-center">
+<!--                                 <div class="col col-md-6 col-lg-7 hidden-sm-down">
                                     <h2 class="fs-xxl fw-500 mt-4 text-white">
-                                        The simplest UI toolkit for developers &amp; programmers
+                                        
                                         <small class="h3 fw-300 mt-3 mb-5 text-white opacity-60">
                                             Presenting you with the next level of innovative UX design and engineering. The most modular toolkit available with over 600+ layout permutations. Experience the simplicity of SmartAdmin, everywhere you go!
                                         </small>
@@ -49,8 +49,8 @@
                                             </a>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto">
+                                </div> -->
+                                <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                     <h1 class="text-white fw-300 mb-3 d-sm-block d-md-none">
                                         Secure login
                                     </h1>
@@ -81,11 +81,11 @@
                                                 </div>
                                             </div>
                                             <div class="row no-gutters">
-                                                <div class="col-lg-6 pr-lg-1 my-2">
+<!--                                                 <div class="col-lg-6 pr-lg-1 my-2">
                                                     <button type="submit" class="btn btn-info btn-block btn-lg">Sign in with <i class="fab fa-google"></i></button>
-                                                </div>
-                                                <div class="col-lg-6 pl-lg-1 my-2">
-                                                    <button id="js-login-btn" type="submit" class="btn btn-danger btn-block btn-lg">Secure login</button>
+                                                </div> -->
+                                                <div class="col-lg-12 pl-lg-1 my-2">
+                                                    <button id="js-login-btn" type="submit" class="btn btn-danger btn-block btn-lg">Login</button>
                                                 </div>
                                             </div>
                                         </form>

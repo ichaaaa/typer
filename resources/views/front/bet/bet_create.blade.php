@@ -36,6 +36,7 @@
     </div>
 
 </div>
+
 <div class="row">
     <div class="col-12">
         {{ Form::button('Zapisz', array('type'=>'submit', 'id'=>'save-bet-button', 'class' => 'btn btn-primary btn-lg btn-block waves-effect waves-themed')) }}        

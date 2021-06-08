@@ -4,6 +4,7 @@ namespace App;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Permission extends Model
 {
@@ -14,6 +15,11 @@ class Permission extends Model
 
     public function users()
     {
-    	return $this->belongToMany(User::class, 'users_permission');
+    	return $this->belongsToMany(User::class, 'users_permission');
+    }
+
+    public function setSlugAttribute($value)
+    {
+    	$this->attributes['slug'] = Str::slug($value);
     }
 }

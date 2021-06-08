@@ -49,9 +49,14 @@ trait HasPermissionsTrait
 
   public function hasRole( ... $roles ) {
 
+
     foreach ($roles as $role) {
+
       if ($this->roles->contains('slug', $role)) {
+        //dd($this->roles->contains('slug', $role));
         return true;
+
+
       }
     }
     return false;
@@ -67,7 +72,7 @@ trait HasPermissionsTrait
     return $this->belongsToMany(Permission::class,'users_permission');
 
   }
-  protected function hasPermission($permission) {
+  public function hasPermission($permission) {
 
     return (bool) $this->permissions->where('slug', $permission->slug)->count();
   }

@@ -30,7 +30,7 @@ class UserTyperController extends Controller
 
         $closestDate = Game::findClosestMatchDate(array_keys($matches));
 
-        $bets = BetTransformerService::getArrayByMatch($typer->id, Auth::id());
+        $bets = BetTransformerService::getArrayByTyperUser($typer->id, Auth::id());
         return view('front.typer.typer_details', compact(['competition', 'matches', 'closestDate', 'typer', 'bets']));
     }
 

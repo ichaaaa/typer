@@ -16,7 +16,6 @@ class TyperMatchBetResultController extends Controller
     {
 
     	$bets = Bet::doesntHave('betResult')->where('typer_id', $typer->id)->where('match_id', $match_id)->get();
-    	//dd($bets);
     	$match = $matchService->find($match_id);
 
     	foreach($bets as $bet)
@@ -34,23 +33,8 @@ class TyperMatchBetResultController extends Controller
 				$betResult->save();
     		}
     	}
+
+        return back();
     }
 
-    public function index(Typer $typer, MatchService $matchService)
-    {
-    	$bets = Bet::doesntHave('betResult')->where('typer_id', $typer->id)->get();
-    	$matches = [];
-
-    	foreach($bets as $bet)
-    	{
-    		$match = $matchService->find($bet->match_id);
-
-    		if($match->getStatus() == 'FINISHED')
-    		{
-				$matches[$bet->match_id] = $match;
-    		}
-    	}
-
-    	return view('admin.matches_to_check_bet_list', compact('matches', 'typer'));
-    }
 }

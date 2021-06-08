@@ -170,10 +170,13 @@
                                                             <td>{{$match->getHour()}}</td>
                                                             <td><a href="{{route('show_team_details',['id' => $match->getHomeTeam()->getId()])}}" >{{$match->getHomeTeam()->getName()}}</a> : <a href="{{route('show_team_details',['id' => $match->getAwayTeam()->getId()])}}" >{{$match->getAwayTeam()->getName()}}</a></td>
                                                             <td>{{$match->getFullTimeScore()->getHomeTeamScore()}} : {{$match->getFullTimeScore()->getAwayTeamScore()}} <a href="{{route('show_match_details', ['id' => $match->getId()])}}" id="match-{{$match->getId()}}" class="badge badge-primary">Pokaż więcej</a></td>
-                                                            <td>@if(isset($bets[$typer->id][Auth::id()][$match->getId()])) {{$bets[$typer->id][Auth::id()][$match->getId()]->home_team_score}} : {{$bets[$typer->id][Auth::id()][$match->getId()]->away_team_score}} @if($bets[$typer->id][Auth::id()][$match->getId()]->sure_thing) <i class="fas fa-check" data-toggle="tooltip" data-original-title="Pewniak"></i> @endif @endif</td>
+                                                            <td id="bet-{{$match->getId()}}">@if(isset($bets[$typer->id][Auth::id()][$match->getId()])) {{$bets[$typer->id][Auth::id()][$match->getId()]->home_team_score}} : {{$bets[$typer->id][Auth::id()][$match->getId()]->away_team_score}} @if($bets[$typer->id][Auth::id()][$match->getId()]->sure_thing) <i class="fas fa-check" data-toggle="tooltip" data-original-title="Pewniak"></i> @endif @endif</td>
                                                             <td></td>
                                                             <td>{{$match->getStatus()}}</td>
-                                                            <td>@if($match->getStatus() == 'SCHEDULED' && !isset($bets[$typer->id][Auth::id()][$match->getId()]) )<button type="button" class="btn btn-primary waves-effect waves-themed create-bet" data-attr="{{route('create_bet', ['id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Typujesz wynik">Typuj wynik</button>@elseif($match->getStatus() == 'SCHEDULED' && isset($bets[$typer->id][Auth::id()][$match->getId()]) ) <button type="button" class="btn btn-primary waves-effect waves-themed create-bet" data-attr="{{route('edit_bet', ['bet'=>$bets[$typer->id][Auth::id()][$match->getId()]])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Edytujesz typ">Edytuj typ</button> @else <button type="button"  class="btn btn-primary waves-effect waves-themed show-bets-list" data-attr="{{route('match_bet_list', ['match_id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="{{$match->getHomeTeam()->getName()}} {{$match->getFullTimeScore()->getHomeTeamScore()}} : {{$match->getFullTimeScore()->getAwayTeamScore()}} {{$match->getAwayTeam()->getName()}}">Pokaż typy</button> @endif</td>
+                                                            <td id="actions-{{$match->getId()}}">
+                                                                @if($match->getStatus() == 'SCHEDULED' && !isset($bets[$typer->id][Auth::id()][$match->getId()]) )<button type="button" class="btn btn-primary waves-effect waves-themed create-bet" data-attr="{{route('create_bet', ['id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Typujesz wynik">Typuj wynik</button>@elseif($match->getStatus() == 'SCHEDULED' && isset($bets[$typer->id][Auth::id()][$match->getId()]) ) <button type="button" class="btn btn-primary waves-effect waves-themed create-bet" data-attr="{{route('edit_bet', ['bet'=>$bets[$typer->id][Auth::id()][$match->getId()]])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Edytujesz typ">Edytuj typ</button> @else <button type="button"  class="btn btn-primary waves-effect waves-themed show-bets-list" data-attr="{{route('match_bet_list', ['match_id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="{{$match->getHomeTeam()->getName()}} {{$match->getFullTimeScore()->getHomeTeamScore()}} : {{$match->getFullTimeScore()->getAwayTeamScore()}} {{$match->getAwayTeam()->getName()}}">Pokaż typy</button> @endif
+                                                                <button type="button"  class="btn btn-primary waves-effect waves-themed create-question-answer" data-attr="{{route('create_question_answer', ['match_id'=>$match->getId(), 'typer' => $typer])}}" data-toggle="modal" data-target=".default-example-modal-right-lg" data-title="Odpowiedz na pytanie">Odpowiedz na pytanie</button>
+                                                            </td>
                                                         </tr>
                                                         @endforeach
                                                     </tbody>
@@ -193,67 +196,6 @@
                                             @endforeach
                                         </div>
 
-
-<!-- 								            <ul class="nav nav-pills nav-justified" role="tablist">
-								                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-1">Tabela Uczestników</a></li>
-								                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#tab-2">Zakłady</a></li>
-								            </ul>
-								            <div class="tab-content py-3">
-								                <div class="tab-pane fade" id="tab-1" role="tabpanel">
-		                                           	<table class="table table-bordered table-hover table-striped w-100">
-		                                                <thead>
-		                                                    <tr>
-		                                                        <th>Nazwa</th>
-		                                                        <th>Punkty</th>
-                                                                <th>Trafione wyniki</th>
-                                                                <th>Trafieni zwycięzcy</th>
-		                                                        <th>Pytania</th>
-		                                                        <th></th>
-		                                                    </tr>
-		                                                </thead>
-		                                                <tbody>
-
-		                                                </tbody>
-		                                                <tfoot>
-		                                                    <tr>
-                                                                <th>Nazwa</th>
-                                                                <th>Punkty</th>
-                                                                <th>Trafione wyniki</th>
-                                                                <th>Trafieni zwycięzcy</th>
-                                                                <th>Pytania</th>
-		                                                        <th></th>
-		                                                    </tr>
-		                                                </tfoot>
-		                                            </table>								                	
-								                </div>
-								                <div class="tab-pane fade" id="tab-2" role="tabpanel">
-		                                           	<table class="table table-bordered table-hover table-striped w-100">
-		                                                <thead>
-		                                                    <tr>
-		                                                        <th>Data</th>
-		                                                        <th>Drużyny</th>
-		                                                        <th>Wynik</th>
-		                                                        <th>Twój typ</th>
-		                                                        <th>Status</th>
-		                                                        <th></th>
-		                                                    </tr>
-		                                                </thead>
-		                                                <tbody>
-
-		                                                </tbody>
-		                                                <tfoot>
-		                                                    <tr>
-                                                                <th>Data</th>
-                                                                <th>Drużyny</th>
-                                                                <th>Wynik</th>
-                                                                <th>Twój typ</th>
-                                                                <th>Status</th>
-                                                                <th></th>
-		                                                    </tr>
-		                                                </tfoot>
-		                                            </table>								                	
-								                </div>
- -->								            <!-- </div> -->
 								        </div>
 								    </div>
 								</div>                        		
@@ -379,44 +321,6 @@
                 })
             });
 
-            $(document).on('click', '.create-bet', function(event) {
-                event.preventDefault();
-                var title = $(this).attr('data-title');
-                let href = $(this).attr('data-attr');
-                $.ajax({
-                    url: href,
-                    beforeSend: function() {
-                        $('#loader').show();
-                        $('.default-example-modal-right-lg .modal-body').html('');
-                    },
-                    // return the result
-                    success: function(result) {
-                        $('.default-example-modal-right-lg').modal("show");
-                        $('.default-example-modal-right-lg .modal-body').html(result).show();
-                        $('.default-example-modal-right-lg .modal-title').text(title);
-
-                        $('table[id^=dt-standing]').dataTable(
-                        {
-                            bLengthChange: true,
-                                "lengthMenu": [ [10, 20, -1], [10, 20, "All"] ],
-                                "iDisplayLength": 20,
-                                bInfo: false,
-                                responsive: true,
-                                "bAutoWidth": false
-                        });
-                    },
-                    complete: function() {
-                        $('#loader').hide();
-                    },
-                    error: function(jqXHR, testStatus, error) {
-                        console.log(error);
-                        alert("Page " + href + " cannot open. Error:" + error);
-                        $('#loader').hide();
-                    },
-                    timeout: 8000
-                })
-            });
-
             $(document).on('click', '.show-bets-list', function(event) {
                 event.preventDefault();
                 var title = $(this).attr('data-title');
@@ -485,9 +389,48 @@
                 })
             });
 
+            $(document).on('click', '.create-bet', function(event) {
+                event.preventDefault();
+                var title = $(this).attr('data-title');
+                let href = $(this).attr('data-attr');
+                $.ajax({
+                    url: href,
+                    beforeSend: function() {
+                        $('#loader').show();
+                        $('.default-example-modal-right-lg .modal-body').html('');
+                    },
+                    // return the result
+                    success: function(result) {
+                        $('.default-example-modal-right-lg').modal("show");
+                        $('.default-example-modal-right-lg .modal-body').html(result).show();
+                        $('.default-example-modal-right-lg .modal-title').text(title);
+
+                        $('table[id^=dt-standing]').dataTable(
+                        {
+                            bLengthChange: true,
+                                "lengthMenu": [ [10, 20, -1], [10, 20, "All"] ],
+                                "iDisplayLength": 20,
+                                bInfo: false,
+                                responsive: true,
+                                "bAutoWidth": false
+                        });
+                    },
+                    complete: function() {
+                        $('#loader').hide();
+                    },
+                    error: function(jqXHR, testStatus, error) {
+                        console.log(error);
+                        alert("Page " + href + " cannot open. Error:" + error);
+                        $('#loader').hide();
+                    },
+                    timeout: 8000
+                })
+            });            
+
 
 
             $(document).on('click', '#save-bet-button', function(event) {
+                $(this).remove();
                 event.preventDefault();
                 $.ajax({
                     /* the route pointing to the post function */
@@ -497,8 +440,16 @@
                     data: $('#create-bet-form').serialize(),
                     dataType: 'JSON',
                     /* remind that 'data' is the response of the AjaxController */
-                    success: function (data) { 
+                    success: function (data) {
                         alert(data.msg);
+                        //console.log(data);
+                        $("#bet-"+data.match_id).text(data.home_team_score+" : "+data.away_team_score);
+                        if(data.sure_thing == 1)
+                        {
+                            $("#bet-"+data.match_id).append(' <i class="fas fa-check" data-toggle="tooltip" data-original-title="Pewniak"></i>');
+                        }
+                        $('#actions-'+data.match_id).find('button').remove();
+
                     },
                     error:function(data){
                         obj = data.responseJSON.errors;
@@ -522,6 +473,13 @@
                     /* remind that 'data' is the response of the AjaxController */
                     success: function (data) { 
                         alert(data.msg);
+                        $("#bet-"+data.match_id).text(data.home_team_score+" : "+data.away_team_score);
+                        if(data.sure_thing == 1)
+                        {
+                            $("#bet-"+data.match_id).append(' <i class="fas fa-check" data-toggle="tooltip" data-original-title="Pewniak"></i>');
+                        }else{
+                            $("#bet-"+data.match_id).find('.fa-check').remove();
+                        }
                     },
                     error:function(data){
                         obj = data.responseJSON.errors;
@@ -533,47 +491,9 @@
                 }); 
             });
 
-            // $(document).on('click', '#matches-modal-button', function(event) {
-            //     event.preventDefault();
-            //     var title = $(this).attr('data-title');
-            //     let href = $(this).attr('data-attr');
-            //     $.ajax({
-            //         url: href,
-            //         beforeSend: function() {
-            //             $('#loader').show();
-            //             $('.default-example-modal-right-lg .modal-body').html('');
-            //         },
-            //         // return the result
-            //         success: function(result) {
-            //             $('.default-example-modal-right-lg').modal("show");
-            //             $('.default-example-modal-right-lg .modal-body').html(result).show();
-            //             $('.default-example-modal-right-lg .modal-title').text(title);
-
-            //             $('#dt-matches').dataTable(
-            //             {
-            //                 responsive: true
-            //             });
-            //         },
-            //         complete: function() {
-            //             $('#loader').hide();
-            //         },
-            //         error: function(jqXHR, testStatus, error) {
-            //             console.log(error);
-            //             alert("Page " + href + " cannot open. Error:" + error);
-            //             $('#loader').hide();
-            //         },
-            //         timeout: 8000
-            //     })
-            // });
 
             $(document).ready(function()
             {
- //console.log('{{$closestDate}}');
-                // if($('.game-date').first().text() == '2020-08-08')
-                // {
-                    
-                // }
-
                 $('.game-date').each(function(e){
                     if($(this).text() == "{{$closestDate}}" ){
                         $(this).click();

@@ -10,7 +10,7 @@
     <tbody>
     	@forelse($ranking as $user)
     	<tr>
-    		<td>#</td>
+    		<td>{{$user->position}}</td>
     		<td>{{$user->name}}</td>
             <td>{{$user->points}}</td>
     	</tr>

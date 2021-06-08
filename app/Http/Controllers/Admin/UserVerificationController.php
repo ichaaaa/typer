@@ -15,7 +15,6 @@ class UserVerificationController extends Controller
     
     public function store(Typer $typer, User $user)
     {
-    	//dd($typer);
     	$typer->users()->wherePivot('user_id', '=', $user->id)->update(['verified' => 1]);
     	ConfirmationNotification::dispatch($typer, $user);
 

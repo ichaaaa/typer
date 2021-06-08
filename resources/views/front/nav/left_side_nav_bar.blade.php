@@ -25,7 +25,7 @@
                                         {{Auth::user()->name}}
                                     </span>
                                 </a>
-                                <span class="d-inline-block text-truncate text-truncate-sm">Toronto, Canada</span>
+                                <!-- <span class="d-inline-block text-truncate text-truncate-sm">Toronto, Canada</span> -->
                             </div>
                             <img src="{{asset('img/card-backgrounds/cover-2-lg.png')}}" class="cover" alt="cover">
                             <a href="#" onclick="return false;" class="pull-trigger-btn" data-action="toggle" data-class="list-filter-active" data-target=".page-sidebar" data-focus="nav_filter_input">
@@ -36,23 +36,28 @@
                             @role('admin')
                             <li class="active open">
                                 <a href="#" title="Administracja" data-filter-tags="administracja">
-                                    <i class="fal fa-info-circle"></i>
+                                    <i class="fal fa-cog"></i>
                                     <span class="nav-link-text" data-i18n="nav.application_intel">Administracja</span>
                                 </a>
                                 <ul>
                                     <li class="active">
                                         <a href="{{route('data_provider_list')}}" title="API" data-filter-tags="administracja api">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_analytics_dashboard">API</span>
+                                            <span class="nav-link-text">API</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="{{route('typer_list')}}" title="Typery" data-filter-tags="administracja typery">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_marketing_dashboard">Typery</span>
+                                            <span class="nav-link-text">Typery</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="#" title="Użytkownicy" data-filter-tags="administracja uzytkownicy">
-                                            <span class="nav-link-text" data-i18n="nav.application_intel_introduction">Użytkownicy</span>
+                                        <a href="{{route('users_list')}}" title="Użytkownicy" data-filter-tags="administracja uzytkownicy">
+                                            <span class="nav-link-text">Użytkownicy</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('roles_permissions_list')}}" title="Uprawnienia" data-filter-tags="administracja uprawnienia">
+                                            <span class="nav-link-text">Role - Uprawnienia</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -61,7 +66,7 @@
                             @role('user')
                             <li>
                                 <a href="#" title="Typery" data-filter-tags="typery">
-                                    <i class="fal fa-cog"></i>
+                                    <i class="fal fa-book"></i>
                                     <span class="nav-link-text" data-i18n="nav.theme_settings">Typery</span>
                                 </a>
                                 <ul>
@@ -85,7 +90,8 @@
 
                             <li>
                                 <a href="#" title="Informacje z boisk" data-filter-tags="informacje z boisk">
-                                    <i class="fal fa-book"></i>
+                                    
+                                    <i class="fal fa-info-circle"></i>
                                     <span class="nav-link-text" data-i18n="nav.documentation">Informacje z boisk</span>
                                 </a>
                                 <ul>
